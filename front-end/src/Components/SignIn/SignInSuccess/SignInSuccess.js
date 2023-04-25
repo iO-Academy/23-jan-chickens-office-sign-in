@@ -7,6 +7,10 @@ const SignInSuccess = () => {
         navigate("/")
     }
 
+    setTimeout(function() {
+        navigate("/");
+      }, 10000);
+
     return (
         <>
             <SignInNav />
