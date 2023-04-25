@@ -5,7 +5,23 @@ const SignInForm = () => {
 
     const handleSignIn = (event) => {
         event.preventDefault()
-        navigate("/sign-in/success")
+        const name = "taken from name inout from form"
+        const company = "taken from name inout from form"
+        const date = "taken from name inout from form"
+        const time = "taken from name inout from form"
+        const responseBody ={
+            name: name,
+            company: company,
+            signInTime: time,
+        }
+        fetch('localhost:3001', {
+                method: "POST",
+                headres: "application/json",
+                body:JSON.stringify(responseBody)
+            }
+        ).then(response => response.json())
+        .then(navigate("/sign-in/success"))
+        
     }
 
     return (
