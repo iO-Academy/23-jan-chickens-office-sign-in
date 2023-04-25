@@ -1,36 +1,33 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 const SignInForm = () => {
-    
+
     const navigate = useNavigate()
     const [name, setName] = useState(null)
     const [company, setCompany] = useState(null)
     const [date, setDate] = useState(null)
     const [time, setTime] = useState(null)
 
-    const handleSignIn = (event) => {
+    async function handleSignIn(event) {
         event.preventDefault()
-<<<<<<< HEAD
-        const name = "taken from name inout from form"
-        const company = "taken from name inout from form"
-        const date = "taken from name inout from form"
-        const time = "taken from name inout from form"
-=======
->>>>>>> ca55afda6e17d6781bda27bc51c75d0bf08c9849
-        const requestBody ={
+        const requestBody = {
             name: name,
             company: company,
             signInTime: time
         }
-        console.log(requestBody)
-        fetch('http://localhost:3001', {
-                method: "POST",
-                headers: "application/json",
-                body:JSON.stringify(requestBody)
+        fetch('http://localhost:3001/visitors', {
+            method: "POST",
+            body: JSON.stringify(requestBody),
+            headers: {
+                "Content-Type": "application/json"
             }
+        }
         ).then(response => response.json())
-        .then(navigate("/sign-in/success"))
-        
+        .then((data) => {
+                console.log(data)
+                navigate("/sign-in/success")
+            })
+
     }
 
     const handleNameChange = (event) => {
