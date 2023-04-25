@@ -9,15 +9,15 @@ const SignInForm = () => {
         const company = "taken from name inout from form"
         const date = "taken from name inout from form"
         const time = "taken from name inout from form"
-        const responseBody ={
+        const requestBody ={
             name: name,
             company: company,
-            signInTime: time,
+            signInTime: time
         }
         fetch('localhost:3001', {
                 method: "POST",
-                headres: "application/json",
-                body:JSON.stringify(responseBody)
+                headers: "application/json",
+                body:JSON.stringify(requestBody)
             }
         ).then(response => response.json())
         .then(navigate("/sign-in/success"))
