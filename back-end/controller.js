@@ -8,6 +8,8 @@ const addNewVisitor = async (request, response) => {
         signInTime: request.body.signInTime,
         signedIn: true
     }
+    request.body.company ? newVisitor[company] = 
+    Object.keys(request.body).forEach(())
     console.log("hello, world")
     console.dir(newVisitor)
     await collection.insertOne(newVisitor)
