@@ -8,7 +8,7 @@ const SignInSuccess = () => {
 
     return (
         <div>
-            <nav className="bg-amber-300 p-4 flex flex-row">
+            <nav className="bg-amber-300 p-4">
                 <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
             </nav>            <div className="flex flex-col gap-4 items-center justify-center pt-10">
                 <img className="max-w-sm pt-10" src={iOLogo} alt="iO academy logo" />
