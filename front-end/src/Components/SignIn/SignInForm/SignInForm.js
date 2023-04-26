@@ -2,17 +2,16 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 const SignInForm = () => {
 
+    const today = new Date()
+    const defaultDate = today.toISOString().substring(0, 10)
+    const defaultTime = today.toISOString().substring(11, 16);
     const navigate = useNavigate()
     const [name, setName] = useState(null)
     const [company, setCompany] = useState(null)
-    const [date, setDate] = useState(null)
-    const [time, setTime] = useState(null)
-    const today = new Date()
-    today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000 )
+    const [time, setTime] = useState(defaultTime)
+    const [date, setDate] = useState(defaultDate)
 
-    const defaultDate = today.toISOString().substring(0,10)
-    const defaultTime = today.toISOString().substring(11,16);
-    async function handleSignIn(event) {
+    const handleSignIn = (event) => {
         event.preventDefault()
         const requestBody = {
             name: name,
@@ -20,6 +19,7 @@ const SignInForm = () => {
             date: date,
             signInTime: time
         }
+        console.log(requestBody)
         fetch('http://localhost:3001/visitors', {
             method: "POST",
             body: JSON.stringify(requestBody),
@@ -27,13 +27,14 @@ const SignInForm = () => {
                 "Content-Type": "application/json"
             }
         }
-        ).then(response => response.json())
-            .then((data) => {
-                console.log(data)
-                navigate("/sign-in/success")
-            })
-
+        ).then((response) => {
+            console.log(response.status)
+            response.status === 200 ?
+                navigate("/sign-in/success") :
+                navigate("/sign-in/failure")
+        })
     }
+
 
     const handleNameChange = (event) => {
         setName(event.target.value)
