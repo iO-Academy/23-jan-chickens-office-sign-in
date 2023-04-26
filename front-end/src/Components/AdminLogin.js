@@ -3,21 +3,25 @@ import { Link, useNavigate } from 'react-router-dom'
 import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
 
-const AdminLogin = () => {
+const AdminLogin = (props) => {
     const [passcode, setPasscode] = useState([])
     const navigate = useNavigate()
-    
+
     const attemptLogin = (event) => {
-        const requestBody = { passcode: passcode }
         fetch("/admin-login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(requestBody)
+            body: JSON.stringify({ passcode: passcode })
         })
             .then((response) => {
-                response.status === 200 ?
-                    navigate("/admin") :
-                    navigate("/admin-login/failure")
+                if (response.status !== 200) {
+                    props.setLoggedIn(false)
+                    navigate("/admin-login/incorrect")
+                } else {
+                    props.setLoggedIn(true)
+                    navigate("/admin")
+                }
+                
             })
 
     }

@@ -9,29 +9,20 @@ import AdminLoginFailure from './Components/AdminLoginFailure'
 
 import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 
 function App() {
 
-  const [sessionId, setSessionId] = useState(false)
-  const checkSession = (nextState, replace, next) => {
-    //fetch get request to /checkLogin
-    let authenticated = false
-    if (!authenticated) {
-      replace({
-        pathname: "/admin-login",
-        state: { nextPathname: nextState.location.pathname }
-      })
-    }
-    next()
-  }
+  const [loggedIn, setLoggedIn] = useState(false)
 
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin-login" element={<AdminLogin setLoggedIn={setLoggedIn} />} />
         <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
-        <Route path="/admin" element={<Admin />} onEnter={checkSession} />
+        <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
+        <Route path="/admin" element={loggedIn ? <Admin /> : <AdminLogin />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
