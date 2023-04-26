@@ -12,9 +12,7 @@ async function getCollection(db, collection) {
 
 const store = new MongoDBStore({
     uri: mongoUrl, // replace with your MongoDB connection URI
-    database: 'OfficeSignIn',
-     collection: 'sessions', // name of the collection where session data will be stored
-     expires: 1
+    collection: 'sessions' // name of the collection where session data will be stored
 })
 
 module.exports = { getCollection, store }
