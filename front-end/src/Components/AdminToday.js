@@ -1,4 +1,4 @@
-const ADminToday = () => {
+const AdminToday = () => {
     
     let allPeopleInBuilding
     //return all people in building using fetch

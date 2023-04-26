@@ -1,11 +1,13 @@
-import { useState } from 'react'
 import Home from './Components/Home'
 import SignOut from './Components/SignOut'
 import SignIn from './Components/SignIn'
-import SignInSuccess from './Components/SignInSuccess';
-import SignInFailure from './Components/SignInFailure';
+import SignInSuccess from './Components/SignInSuccess'
+import SignInFailure from './Components/SignInFailure'
 import AdminLogin from './Components/AdminLogin'
 import Admin from './Components/Admin'
+import AdminLoginFailure from './Components/AdminLoginFailure'
+
+import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
@@ -28,6 +30,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
         <Route path="/admin" element={<Admin />} onEnter={checkSession} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />

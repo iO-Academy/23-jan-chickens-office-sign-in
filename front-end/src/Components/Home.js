@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom"
-import iOLogo from "../../io-logo.jpg"
+import iOLogo from "../io-logo.jpg"
 
 const Home = () => {
     return (

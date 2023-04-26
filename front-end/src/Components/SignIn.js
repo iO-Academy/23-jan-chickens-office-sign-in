@@ -1,6 +1,5 @@
 import SignInForm from "./SignInForm"
-import SignInNav from "./SignIn/SignInNav/SignInNav"
-
+import SignInNav from "./SignInNav"
 const SignIn = () => {
 
     return (

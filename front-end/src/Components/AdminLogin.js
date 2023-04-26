@@ -1,26 +1,29 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import iOLogo from '../../io-logo.jpg'
+import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
 
 const AdminLogin = () => {
-    const [pin, setPin] = useState([])
+    const [passcode, setPasscode] = useState([])
     const navigate = useNavigate()
-    // const handleSubmit = (event) => {
-    //     event.preventDefault()
-    //     const pincodeString = firstNumber + secondNumber + thirdNumber + fourthNumber
-    //     // fetch("/admin-login", {
-    //     //     method: "POST",
-    //     //     headers:{"Content-Type": "application/json"},
-    //     //     body: JSON.encode(pincodeString)
-    //     // })
-    //     // .then(response => response.json())
-    //     // .then((data) => {
-    //     //     //set the session.id here, record as state in app
-    //     // })
+    
+    const attemptLogin = (event) => {
+        const requestBody = { passcode: passcode }
+        fetch("/admin-login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(requestBody)
+        })
+            .then((response) => {
+                response.status === 200 ?
+                    navigate("/admin") :
+                    navigate("/admin-login/failure")
+            })
 
-    //     navigate("/admin")
-    // }
+    }
+
+
+
     return (
         <>
             <nav className="bg-amber-300 p-4 flex flex-row">
@@ -37,18 +40,18 @@ const AdminLogin = () => {
                     initialValue=""
                     secret
                     secretDelay={100}
-                    onChange={value => setPin(value)}
+                    onChange={value => setPasscode(value)}
                     type="numeric"
                     inputMode="number"
                     focus
                     inputStyle={{ borderColor: 'black' }}
                     inputFocusStyle={{ borderColor: 'orange' }}
-                    onComplete={()=> {navigate("/admin")}}
+                    onComplete={value => attemptLogin()}
                     autoSelect={true}
                     regexCriteria={/[0-9]{4}/}
                 />
             </div>
-            <p>{pin}</p>
+            <p>{passcode}</p>
         </>
     )
 }

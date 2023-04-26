@@ -1,5 +1,5 @@
 import { useNavigate, Link } from "react-router-dom";
-import iOLogo from '../../io-logo.jpg'
+import iOLogo from '../io-logo.jpg'
 const Admin = () => {
     const navigate = useNavigate()
     setTimeout(function () {
