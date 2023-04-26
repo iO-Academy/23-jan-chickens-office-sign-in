@@ -7,7 +7,11 @@ const SignInForm = () => {
     const [company, setCompany] = useState(null)
     const [date, setDate] = useState(null)
     const [time, setTime] = useState(null)
+    const today = new Date()
+    today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000 )
 
+    const defaultDate = today.toISOString().substring(0,10)
+    const defaultTime = today.toISOString().substring(11,16);
     async function handleSignIn(event) {
         event.preventDefault()
         const requestBody = {
@@ -23,7 +27,7 @@ const SignInForm = () => {
             }
         }
         ).then(response => response.json())
-        .then((data) => {
+            .then((data) => {
                 console.log(data)
                 navigate("/sign-in/success")
             })
@@ -43,21 +47,32 @@ const SignInForm = () => {
         setTime(event.target.value)
     }
 
+
     return (
-        <>
-            <form onSubmit={handleSignIn}>
-                <label htmlFor="name">Name*</label>
-                <input type="text" id="name" name="name" onChange={handleNameChange} required />
-                <label htmlFor="company">Company</label>
-                <input type="text" id="company" name="company" onChange={handleCompanyChange} />
-                <label htmlFor="date">Date*</label>
-                <input type="date" id="date" name="date" onChange={handleDateChange} required />
-                <label htmlFor="time">Time*</label>
-                <input type="time" id="time" name="time" onChange={handleTimeChange} required />
-                <input type="submit" value="Sign me in" />
+        <div className="w-full max-w-xs mx-auto">
+            <form className="bg-amber-400 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSignIn}>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name*</label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="name" name="name" onChange={handleNameChange} required />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="company">Company</label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="company" name="company" onChange={handleCompanyChange} />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">Date*</label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="date" id="date" name="date" onChange={handleDateChange} defaultValue={defaultDate} required />
+                </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">Time*</label>
+                    <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="time" id="time" name="time" onChange={handleTimeChange} defaultValue={defaultTime} required />
+                </div>
+                <div>
+                    <input className="transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign me in" />
+                </div>
+                <p className="text-500 text-xs italic">* required</p>
             </form>
-            <p>* required field</p>
-        </>
+        </div>
     )
 }
 
