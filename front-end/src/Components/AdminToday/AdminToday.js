@@ -1,4 +1,4 @@
-const Today = () => {
+const ADminToday = () => {
     
     let allPeopleInBuilding
     //return all people in building using fetch
@@ -8,3 +8,5 @@ const Today = () => {
         </div>
     )
 }
+
+export default AdminToday

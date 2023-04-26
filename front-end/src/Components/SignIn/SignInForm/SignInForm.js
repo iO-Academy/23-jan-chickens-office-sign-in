@@ -17,6 +17,7 @@ const SignInForm = () => {
         const requestBody = {
             name: name,
             company: company,
+            date: date,
             signInTime: time
         }
         fetch('http://localhost:3001/visitors', {
@@ -50,7 +51,7 @@ const SignInForm = () => {
 
     return (
         <div className="w-full max-w-xs mx-auto">
-            <form className="bg-amber-400 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSignIn}>
+            <form className="bg-amber-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSignIn}>
                 <div className="mb-4">
                     <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">Name*</label>
                     <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="text" id="name" name="name" onChange={handleNameChange} required />
