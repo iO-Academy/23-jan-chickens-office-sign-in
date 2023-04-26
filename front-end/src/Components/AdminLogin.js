@@ -14,12 +14,13 @@ const AdminLogin = (props) => {
             body: JSON.stringify({ passcode: passcode })
         })
             .then((response) => {
-                if (response.status !== 200) {
+                if (response.status === 200) {
+                    navigate("/admin")
+                } else if (response.status === 401) {
                     navigate("/admin-login/incorrect")
                 } else {
-                    navigate("/admin")
+                    navigate("/admin-login/failure")
                 }
-                
             })
 
     }
