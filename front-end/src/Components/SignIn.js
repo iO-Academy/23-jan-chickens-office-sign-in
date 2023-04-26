@@ -1,5 +1,5 @@
-import SignInForm from "./SignInForm/SignInForm"
-import SignInNav from "./SignInNav/SignInNav"
+import SignInForm from "./SignInForm"
+import SignInNav from "./SignIn/SignInNav/SignInNav"
 
 const SignIn = () => {
 

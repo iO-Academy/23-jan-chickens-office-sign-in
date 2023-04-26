@@ -1,4 +1,4 @@
-import SignInNav from "../SignInNav/SignInNav"
+import SignInNav from "./SignIn/SignInNav/SignInNav"
 import { useNavigate } from "react-router-dom"
 
 const SignInFailure = () => {

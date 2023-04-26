@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import Home from './components/Home/Home'
-import SignOut from './components/SignOut/SignOut'
-import SignIn from './components/SignIn/SignIn'
-import SignInSuccess from './components/SignIn/SignInSuccess/SignInSuccess';
-import SignInFailure from './components/SignIn/SignInFailure/SignInFailure';
-import AdminLogin from './components/AdminLogin/AdminLogin'
-import Admin from './components/Admin/Admin'
+import Home from './Components/Home'
+import SignOut from './Components/SignOut'
+import SignIn from './Components/SignIn'
+import SignInSuccess from './Components/SignInSuccess';
+import SignInFailure from './Components/SignInFailure';
+import AdminLogin from './Components/AdminLogin'
+import Admin from './Components/Admin'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
