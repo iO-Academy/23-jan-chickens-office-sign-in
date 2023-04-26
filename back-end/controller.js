@@ -8,10 +8,12 @@ const addNewVisitor = async (request, response) => {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.body.name
         const signInTime = request.body.signInTime
-        if (name && signInTime && name.length<100) {
+        const date = request.body.date
+        if (name && signInTime && date && name.length<100) {
             const newVisitor = {
-                name: request.body.name,
-                signInTime: request.body.signInTime,
+                name: name,
+                date: date,
+                signInTime: signInTime,
                 signedIn: true
             }
             if (request.body.company) {
