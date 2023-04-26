@@ -3,11 +3,12 @@ const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session);
 const app = express()
 const { addNewVisitor, getAdminAuthorization } = require('./controller.js')
+const { restrictToAdmin } = require('./middleware/restrictToAdmin')
 
 function routes(app) {
     app.post('/visitors', addNewVisitor)
-    app.post('/login', getAdminAuthorization)
-    //app.gt('/admin', restrictToAdmin, adminPageRoute)
+    app.post('/verify', getAdminAuthorization)
+    app.get('/visitors', restrictToAdmin) //adminPageRoute
 }
 
 module.exports = { routes }
