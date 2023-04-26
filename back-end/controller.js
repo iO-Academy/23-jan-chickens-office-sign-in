@@ -44,13 +44,18 @@ const getAdminAuthorization = async (request, response) => {
         
         //generate a random id
         const sessionId = uuidv4()
-
+        console.log("sessionId: " + sessionId)
         // Store the sessionId in MongoDB, 
         // using `store` from DataBaseService.js
         await store.set(sessionId, { admin: true })
+        console.dir("request.session: " + JSON.stringify(request.session))
 
         // Set the sessionId in the session object
-        request.session.adminSessionId = sessionId;
+        request.session['adminSessionId'] = sessionId;
+        console.dir("request.session: " + JSON.stringify(request.session))
+        store.all((error, sessions) => {
+            sessions.forEach((element) => console.log("session: " + JSON.stringify(element)))
+        })
         response.status(200).json(
             { 
                 message: 'Authorization successful',
