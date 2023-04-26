@@ -1,5 +1,8 @@
 const mongoUrl = 'mongodb://root:password@localhost:27017'
 const { MongoClient } = require('mongodb')
+const express = require('express')
+const session = require('express-session')
+const MongoDBStore = require('connect-mongodb-session')(session);
 
 async function getCollection(db, collection) {
     const connection = await MongoClient.connect(mongoUrl)
@@ -7,4 +10,9 @@ async function getCollection(db, collection) {
     return result
 }
 
-module.exports = { getCollection }
+const store = new MongoDBStore({
+    uri: mongoUrl, // replace with your MongoDB connection URI
+     collection: 'sessions' // name of the collection where session data will be stored
+})
+
+module.exports = { getCollection, store }
