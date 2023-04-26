@@ -1,24 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react'
+import Home from './components/Home/Home'
+import SignOut from './components/SignOut/SignOut'
+import SignIn from './components/SignIn/SignIn'
+import SignInSuccess from './components/SignIn/SignInSuccess/SignInSuccess';
+import SignInFailure from './components/SignIn/SignInFailure/SignInFailure';
+import AdminLogin from './components/AdminLogin/AdminLogin'
+import Admin from './components/Admin/Admin'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
+
+  const [sessionId, setSessionId] = useState(false)
+  const checkSession = (nextState, replace, next) => {
+    //fetch get request to /checkLogin
+    let authenticated = false
+    if (!authenticated) {
+      replace({
+        pathname: "/admin-login",
+        state: { nextPathname: nextState.location.pathname }
+      })
+    }
+    next()
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/admin-login" element={<AdminLogin />} />
+        <Route path="/admin" element={<Admin />} onEnter={checkSession} />
+        <Route path="/sign-in/" element={<SignIn />} />
+        <Route path="/sign-in/success" element={<SignInSuccess />} />
+        <Route path="/sign-in/failure" element={<SignInFailure />} />
+        <Route path="/sign-out/*" element={<SignOut />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
