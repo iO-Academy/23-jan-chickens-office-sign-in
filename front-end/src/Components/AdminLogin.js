@@ -8,7 +8,7 @@ const AdminLogin = (props) => {
     const navigate = useNavigate()
 
     const attemptLogin = (event) => {
-        fetch("/admin-login", {
+        fetch("http://localhost:3001/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ passcode: passcode })

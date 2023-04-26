@@ -1,6 +1,15 @@
 import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
 import iOLogo from '../io-logo.jpg'
+
 const AdminToday = () => {
+    const [visitors, setVisitors] = useState(null)
+
+    useEffect(() => {
+        fetch("http://localhost:3001/login")
+            .then(response => response.json())
+            .then((data) => { setVisitors(data) })
+    }, [])
 
     return (
         <>
@@ -11,6 +20,18 @@ const AdminToday = () => {
                 <img className="max-w-sm pt-10" src={iOLogo} alt="iO academy logo" />
                 <h1 className="text-4xl p-1 text-center">Todays Visitors</h1>
             </div>
+            <div>
+                {visitors?.map((visitor, index) => {
+                    <div key={visitor.index}>
+                        <p>{visitor.name}</p>
+                        {visitor.company ?? <p>{visitor.name}</p>}
+                        <p>{visitor.date}</p>
+                        <p>{visitor.signInTime}</p>
+                    </div>
+                }) ?? <p className="text-center pt-10">Loading...</p>
+                }
+            </div>
+
         </>
     )
 }
