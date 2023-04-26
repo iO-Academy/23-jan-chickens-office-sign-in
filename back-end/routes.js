@@ -7,6 +7,7 @@ const { addNewVisitor, getAdminAuthorization } = require('./controller.js')
 function routes(app) {
     app.post('/visitors', addNewVisitor)
     app.post('/login', getAdminAuthorization)
+    //app.gt('/admin', restrictToAdmin, adminPageRoute)
 }
 
 module.exports = { routes }
