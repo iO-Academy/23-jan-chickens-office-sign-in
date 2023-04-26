@@ -19,7 +19,6 @@ const SignInForm = () => {
             date: date,
             signInTime: time
         }
-        console.log(requestBody)
         fetch('http://localhost:3001/visitors', {
             method: "POST",
             body: JSON.stringify(requestBody),
@@ -28,7 +27,6 @@ const SignInForm = () => {
             }
         }
         ).then((response) => {
-            console.log(response.status)
             response.status === 200 ?
                 navigate("/sign-in/success") :
                 navigate("/sign-in/failure")
