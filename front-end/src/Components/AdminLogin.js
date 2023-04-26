@@ -8,20 +8,19 @@ const AdminLogin = (props) => {
     const navigate = useNavigate()
 
     const attemptLogin = (event) => {
-        fetch("/admin-login", {
+        fetch("http://localhost:3001/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ passcode: passcode })
         })
             .then((response) => {
-                if (response.status !== 200) {
-                    props.setLoggedIn(false)
+                if (response.status === 200) {
+                    navigate("/admin")
+                } else if (response.status === 401) {
                     navigate("/admin-login/incorrect")
                 } else {
-                    props.setLoggedIn(true)
-                    navigate("/admin")
+                    navigate("/admin-login/failure")
                 }
-                
             })
 
     }
@@ -30,7 +29,7 @@ const AdminLogin = (props) => {
 
     return (
         <>
-            <nav className="bg-amber-300 p-4 flex flex-row">
+            <nav className="bg-amber-300 p-4">
                 <Link className="ease-in-out delay-150 delay-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
             </nav>
             <div className="flex flex-col gap-4 items-center justify-center pt-10">
