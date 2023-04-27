@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const SignOut = () => {
 
     const navigate = useNavigate()
-    const [name, setName] = useState(null)
+    const [, setName] = useState(null)
     const [visitorsByName, setVisitorsByName] = useState(null)
 
     const handleNameSearch = (event) => {

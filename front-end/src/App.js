@@ -10,14 +10,15 @@ import NoMatch from './Components/NoMatch'
 import AdminToday from './Components/AdminToday'
 import AdminHistory from './Components/AdminHistory'
 import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
+import SignOutSuccess from './Components/SignOutSuccess'
+import SignOutFailure from './Components/SignOutFailure'
 
-import { useState } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 function App() {
 
-const [cookies, setCookie, removeCookie] = useCookies()
+const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>
@@ -31,7 +32,9 @@ const [cookies, setCookie, removeCookie] = useCookies()
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
-        <Route path="/sign-out/*" element={<SignOut />} />
+        <Route path="/sign-out/" element={<SignOut />} />
+        <Route path="/sign-out/success" element={<SignOutSuccess />} />
+        <Route path="/sign-out/failure" element={<SignOutFailure />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>
