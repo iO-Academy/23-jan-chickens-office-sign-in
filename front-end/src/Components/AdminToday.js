@@ -24,11 +24,11 @@ const AdminToday = () => {
             </div>
             <div>
                 {visitors?.map((visitor, index) => {
-                    return (<div key={index}>
-                        <p>{visitor.name}</p>
-                        {visitor.company ?? <p>{visitor.name}</p>}
-                        <p>{visitor.date}</p>
-                        <p>{visitor.signInTime}</p>
+                    return (<div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
+                        <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{visitor.name}</p>
+                        {visitor.company ?? <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >{visitor.name}</p>}
+                        <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{visitor.date}</p>
+                        <p className="w-full px-4 py-2 rounded-b-lg">{visitor.signInTime}</p>
                     </div>)
                 }) ?? <p className="text-center pt-10">Loading...</p>
                 }
