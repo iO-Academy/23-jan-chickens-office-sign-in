@@ -18,8 +18,6 @@ import { useCookies } from 'react-cookie'
 function App() {
 
 const [cookies, setCookie, removeCookie] = useCookies()
-console.log(cookies)
-// console.log(cookies.get('authorized'))
   return (
     <BrowserRouter>
       <Routes>

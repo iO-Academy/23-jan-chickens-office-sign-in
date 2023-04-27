@@ -2,8 +2,11 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
+import { useCookies } from 'react-cookie'
+
 
 const AdminLogin = (props) => {
+    const [cookies, setCookie, removeCookie] = useCookies()
     const [passcode, setPasscode] = useState([])
     const navigate = useNavigate()
 
@@ -16,6 +19,10 @@ const AdminLogin = (props) => {
             body: JSON.stringify({ passcode: value }),
         })
             .then((response) => {
+                if (cookies) {
+                    setCookie(cookies)
+                }
+                console.log(cookies)
                 if (response.status === 200) {
                     navigate("/admin")
                 } else if (response.status === 401) {

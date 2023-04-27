@@ -8,8 +8,10 @@ const restrictToAdmin = (request, response, next) => {
     request.session.cookie.maxAge = 300000
     // If condition is met, allow access to admin page
     request.session.expires = 300000
+    console.log('restrictToAdmin passed')
     next()
   } else {
+    console.log('restrictToAdmin failed')
     // If condition is not met, send error response
     //  error response
   }

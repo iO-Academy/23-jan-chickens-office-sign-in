@@ -49,7 +49,6 @@ const getAdminAuthorization = async (request, response) => {
         // Store the sessionId in MongoDB, 
         // using `store` from DataBaseService.js
         await store.set(sessionId, { admin: true })
-        // console.dir("request.session: " + JSON.stringify(request.session))
 
         // Set the sessionId in the session object
         request.session['adminSessionId'] = sessionId
@@ -59,8 +58,7 @@ const getAdminAuthorization = async (request, response) => {
             maxAge: 900000, 
             secure: false
           })
-        // console.log('cookie created successfully')
-        // console.log(response.cookie.name)
+        //log what's in the store
         store.all((error, sessions) => {
             sessions.forEach((element) => console.log("session: " + JSON.stringify(element)))
         })
