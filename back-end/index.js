@@ -2,7 +2,7 @@ const { routes } = require('./Routes.js')
 const express = require('express')
 const app = express()
 const port = 3001
-const cors = require('cors')
+//const cors = require('cors')
 
 const session = require('express-session')
 const { store } = require('./service/DatabaseService')
