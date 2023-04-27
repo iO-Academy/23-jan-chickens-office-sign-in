@@ -75,5 +75,6 @@ const getAdminAuthorization = async (request, response) => {
             })
         }
   }
-  
+ 
+
 module.exports = { addNewVisitor, getAdminAuthorization }
