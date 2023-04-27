@@ -8,6 +8,8 @@ import Admin from './Components/Admin'
 import AdminLoginFailure from './Components/AdminLoginFailure'
 import NoMatch from './Components/NoMatch'
 import AdminToday from './Components/AdminToday'
+import AdminTodaySuccess from './Components/AdminTodaySuccess'
+import AdminTodayFailure from './Components/AdminTodayFailure'
 import AdminHistory from './Components/AdminHistory'
 import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 import SignOutSuccess from './Components/SignOutSuccess'
@@ -28,6 +30,8 @@ const [cookies, , ] = useCookies()
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
         <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
         <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/success" element={cookies.authorized ? <AdminTodaySuccess /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/failure" element={cookies.authorized ? <AdminTodayFailure /> : <Navigate to="/admin-login" />} />
         <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
