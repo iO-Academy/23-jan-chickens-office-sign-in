@@ -13,11 +13,13 @@ import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 
 import { useState } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
-import Cookies from 'js-cookie'
+import { useCookies } from 'react-cookie'
 
 function App() {
 
-
+const [cookies, setCookie, removeCookie] = useCookies()
+console.log(cookies)
+// console.log(cookies.get('authorized'))
   return (
     <BrowserRouter>
       <Routes>
@@ -25,9 +27,9 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
-        <Route path="/admin" element={!Cookies.get('connect.sid') ? <Admin /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today" element={!Cookies.get('connect.sid') ? <AdminToday /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/history" element={!Cookies.get('connect.sid') ? <AdminHistory /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />

@@ -7,11 +7,13 @@ const AdminLogin = (props) => {
     const [passcode, setPasscode] = useState([])
     const navigate = useNavigate()
 
-    const attemptLogin = (event) => {
-        fetch("http://localhost:3001/login", {
+    const attemptLogin = (value) => {
+
+        fetch("http://localhost:3001/verify", {
             method: "POST",
+            credentials: 'include',
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ passcode: passcode })
+            body: JSON.stringify({ passcode: value }),
         })
             .then((response) => {
                 if (response.status === 200) {
@@ -49,7 +51,7 @@ const AdminLogin = (props) => {
                     focus
                     inputStyle={{ borderColor: 'black' }}
                     inputFocusStyle={{ borderColor: 'orange' }}
-                    onComplete={value => attemptLogin()}
+                    onComplete={value => attemptLogin(value)}
                     autoSelect={true}
                     regexCriteria={/[0-9]{4}/}
                 />

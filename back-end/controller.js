@@ -40,6 +40,7 @@ const addNewVisitor = async (request, response) => {
 
 const getAdminAuthorization = async (request, response) => {
     const loginInput = request.body.passcode
+    console.log(request.body.passcode)
     if (loginInput === '1234') { 
         
         //generate a random id
@@ -48,11 +49,18 @@ const getAdminAuthorization = async (request, response) => {
         // Store the sessionId in MongoDB, 
         // using `store` from DataBaseService.js
         await store.set(sessionId, { admin: true })
-        console.dir("request.session: " + JSON.stringify(request.session))
+        // console.dir("request.session: " + JSON.stringify(request.session))
 
         // Set the sessionId in the session object
-        request.session['adminSessionId'] = sessionId;
-        console.dir("request.session: " + JSON.stringify(request.session))
+        request.session['adminSessionId'] = sessionId
+        // console.dir("request.session: " + JSON.stringify(request.session))
+        response.setHeader('access-control-expose-headers', 'Set-Cookie');
+        response.cookie('authorized',sessionId, { 
+            maxAge: 900000, 
+            secure: false
+          })
+        // console.log('cookie created successfully')
+        // console.log(response.cookie.name)
         store.all((error, sessions) => {
             sessions.forEach((element) => console.log("session: " + JSON.stringify(element)))
         })

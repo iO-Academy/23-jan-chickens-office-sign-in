@@ -1,14 +1,17 @@
 import { useNavigate, Link } from "react-router-dom";
 import iOLogo from '../io-logo.jpg'
-import Cookies from 'js-cookie'
+import { useCookies } from 'react-cookie'
 
 const Admin = (props) => {
     const navigate = useNavigate()
+    const [cookies, setCookie, removeCookie] = useCookies()
+
     const handleLogout = () => {
-        Cookies.remove('connect.sid')
+
+        removeCookie('authorized')
         navigate("/")
     }
-    
+
     return (
         <>
             <nav className="bg-amber-300 p-4">
