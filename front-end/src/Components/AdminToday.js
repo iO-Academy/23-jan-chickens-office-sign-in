@@ -22,16 +22,15 @@ const AdminToday = () => {
                 <img className="max-w-sm pt-10" src={iOLogo} alt="iO academy logo" />
                 <h1 className="text-4xl p-1 text-center">Todays Visitors</h1>
             </div>
-            <div className="flex flex-col justify-center align-center gap-3">
-                {visitors?.map((visitor, index) => {
-                    return (<div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                        <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">{visitor.name}</p>
-                        {visitor.company ?? <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >{visitor.name}</p>}
-                        <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600">{visitor.date}</p>
-                        <p className="w-full px-4 py-2 rounded-b-lg">{visitor.signInTime}</p>
-                    </div>)
-                }) ?? <p className="text-center pt-10">Loading...</p>
-                }
+                <div className="flex flex-wrap justify-center items-center gap-3 mx-auto">
+                    {visitors?.map((visitor, index) => {
+                        return (<div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
+                            <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
+                            <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
+                            <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
+                        </div>)
+                    }) ?? <p className="text-center pt-10">Loading...</p>
+                    }
             </div>
 
         </>
