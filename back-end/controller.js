@@ -143,6 +143,79 @@ const signOutAllVisitors = async (request, response) => {
     }
 }
 
-module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors }
+const getVisitorsByName = async (request, response) => {
+    console.log("before try")
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        console.log("request.params: ")
+        console.dir(request.params)
+        console.log("request.params.name: ")
+        console.dir(request.params.name)
+        const name = request.params.name
+        let data = await collection.find({ name: { $in: [name] } }).toArray()
+        console.log(typeof data)
+        console.log(data.length)
+        if(data.length) {
+        return response.status(200).json({
+            message: "Successfully retrieved visitors by name.",
+            data: data
+        })
+    } else {
+        return response.status(404).json({
+            message: "Unknown name provided.",
+            data: []
+        })
+    }
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+
+}
+
+module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName }
+
+
+// getVisitorsByName
+// method: get
+// URL: /visitors
+// Query parameters: name=[string]
+// Example: /visitors?name=BIll
+// Success response:
+// Code: 200
+// Content
+// {
+// message: "Successfully retrieved visitors by name.",
+// data: [
+// {...},
+// {...}
+// ]
+// }
+// Error response:
+// Code: 500
+// Content
+// {
+// message: "Unexpected error.",
+// data: []
+// }
+// Code: 404
+// {
+// message: "Unknown name provided.",
+// data: []
+// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
