@@ -12,7 +12,6 @@ const SignOut = () => {
         event.preventDefault()
 
         const name = event.target.name.value
-        console.log('http://localhost:3001/visitors/' + name)
         fetch('http://localhost:3001/visitors/' + name, {
             method: "GET",
             headers: {
@@ -21,7 +20,6 @@ const SignOut = () => {
         }
         ).then(response => response.json())
             .then(data => {
-                console.log(JSON.stringify(data.data))
                 setVisitorsByName(data.data)
             })
     }
