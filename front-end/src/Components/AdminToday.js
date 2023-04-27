@@ -6,11 +6,13 @@ const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
 
     useEffect(() => {
-        fetch("http://localhost:3001/login")
+        fetch("http://localhost:3001/visitors?signedIn=true")
             .then(response => response.json())
-            .then((data) => { setVisitors(data) })
+            .then((data) => {
+                setVisitors(data.data)
+            })
     }, [])
-
+    console.log(visitors)
     return (
         <>
             <nav className="bg-amber-300 p-4">
@@ -22,12 +24,12 @@ const AdminToday = () => {
             </div>
             <div>
                 {visitors?.map((visitor, index) => {
-                    <div key={visitor.index}>
+                    return (<div key={index}>
                         <p>{visitor.name}</p>
                         {visitor.company ?? <p>{visitor.name}</p>}
                         <p>{visitor.date}</p>
                         <p>{visitor.signInTime}</p>
-                    </div>
+                    </div>)
                 }) ?? <p className="text-center pt-10">Loading...</p>
                 }
             </div>

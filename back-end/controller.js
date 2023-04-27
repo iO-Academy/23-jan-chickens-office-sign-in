@@ -57,7 +57,7 @@ const getAdminAuthorization = async (request, response) => {
         response.cookie('authorized', sessionId, {
             maxAge: 900000,
             secure: false
-          })
+        })
         //log what's in the store
         store.all((error, sessions) => {
             sessions.forEach((element) => console.log("session: " + JSON.stringify(element)))
@@ -78,13 +78,17 @@ const getAdminAuthorization = async (request, response) => {
 
 const getVisitorsBySignIn = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Visitors")
-        if (Object.keys(request.query).length == 1 && request.query.signedIn == "true") {
-            let data = await collection.find({ signedIn: { $in: [true] } }).toArray()
-            return response.status(200).json({
-                message: "Successfully retrieved visitors",
-                data: data
-            })
+        if (request.query.signedIn === "true" || request.query.signedIn === "false") {
+            const signedInBool = request.query.signedIn === "true" ? true : false
+            const collection = await getCollection("OfficeSignIn", "Visitors")
+
+            if (Object.keys(request.query).length == 1) {
+                let data = await collection.find({ signedIn: { $in: [signedInBool] } }).toArray()
+                return response.status(200).json({
+                    message: "Successfully retrieved visitors",
+                    data: data
+                })
+            }
         } else {
             return response.status(400).json({
                 message: "Bad data type provided.",
@@ -99,45 +103,46 @@ const getVisitorsBySignIn = async (request, response) => {
     }
 }
 
-module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn }
+const signOutOneVisitorById = async (request, response) => {
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        await collection.updateOne(
+            { signedIn: true },
+            { $set: { signedIn: false } }
+        )
+        return response.status(200).json({
+            message: "Successfully signed out visitor.",
+            data: []
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+}
 
 
-// getVisitorsBySignIn
-// method: get
-// URL: /visitors
-// Query parameters: signedIn=[boolean]
-// Example: /visitors?signedIn=true
-// Success response:
-// Code: 200
-// Content
-// {
-// message: "Successfully retrieved visitors",
-// data: [
-// {...},
-// {...}
-// ]
-// }
-// Error response:
-// Code: 500
-// Content
-// {
-// message: "Unexpected error.",
-// data: []
-// }
-// Code: 400
-// {
-// message: "Bad data type provided.",
-// data: []
-// }
+const signOutAllVisitors = async (request, response) => {
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        visitorId = request.body.id
+        await collection.updateOne(
+            { _id: ObjectId(visitorId) },
+            { $set: { signedIn: false } }
+        )
+        return response.status(200).json({
+            message: "Successfully signed out visitor.",
+            data: []
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+}
 
-
-
-
-
-
-
-
-
-
+module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors }
 
 
