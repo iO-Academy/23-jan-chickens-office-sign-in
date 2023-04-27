@@ -1,6 +1,5 @@
-const express = require('express')
-const session = require('express-session')
 const { getCollection, store } = require('./service/DatabaseService')
+const { ObjectId } = require('mongodb')
 const { v4: uuidv4 } = require('uuid')
 
 const addNewVisitor = async (request, response) => {
@@ -103,7 +102,7 @@ const getVisitorsBySignIn = async (request, response) => {
     }
 }
 
-const signOutOneVisitorById = async (request, response) => {
+const signOutAllVisitors = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         await collection.updateOne(
@@ -111,7 +110,7 @@ const signOutOneVisitorById = async (request, response) => {
             { $set: { signedIn: false } }
         )
         return response.status(200).json({
-            message: "Successfully signed out visitor.",
+            message: "Successfully signed out visitors.",
             data: []
         })
     } catch (error) {
@@ -123,14 +122,17 @@ const signOutOneVisitorById = async (request, response) => {
 }
 
 
-const signOutAllVisitors = async (request, response) => {
+const signOutOneVisitorById = async (request, response) => {
+    console.log('before try')
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        visitorId = request.body.id
+        const visitorId = request.params.id
+        console.log(JSON.stringify(request.params))
         await collection.updateOne(
-            { _id: ObjectId(visitorId) },
+            { _id: new ObjectId(visitorId) },
             { $set: { signedIn: false } }
         )
+        console.log('before return')
         return response.status(200).json({
             message: "Successfully signed out visitor.",
             data: []
@@ -152,7 +154,7 @@ const getVisitorsByName = async (request, response) => {
         console.log("request.params.name: ")
         console.dir(request.params.name)
         const name = request.params.name
-        let data = await collection.find({ name: { $in: [name] } }).toArray()
+        let data = await collection.find( {name: name, signedIn: true} ).toArray()
         console.log(typeof data)
         console.log(data.length)
         if(data.length) {

@@ -9,7 +9,7 @@ function routes(app) {
     app.post('/visitors', addNewVisitor)
     app.post('/verify', getAdminAuthorization)
     app.put('/visitors', signOutAllVisitors)
-    app.put('/visitors/{id}', signOutOneVisitorById)
+    app.put('/visitors/:id', signOutOneVisitorById)
     app.get('/visitors/:name', getVisitorsByName)
     app.get('/visitors', restrictToAdmin, getVisitorsBySignIn)
 }
