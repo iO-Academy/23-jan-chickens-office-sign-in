@@ -10,7 +10,7 @@ function routes(app) {
     app.post('/verify', getAdminAuthorization)
     app.put('/visitors', signOutAllVisitors)
     app.put('/visitors/{id}', signOutOneVisitorById)
-    app.get('/visitors', getVisitorsBySignIn)
+    app.get('/visitors', restrictToAdmin, getVisitorsBySignIn)
 }
 
 module.exports = { routes }

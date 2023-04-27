@@ -12,7 +12,7 @@ const AdminToday = () => {
                 setVisitors(data.data)
             })
     }, [])
-    console.log(visitors)
+
     return (
         <>
             <nav className="bg-amber-300 p-4">
@@ -20,7 +20,8 @@ const AdminToday = () => {
             </nav>
             <div className="flex flex-col gap-4 items-center justify-center pt-10">
                 <img className="max-w-sm pt-10" src={iOLogo} alt="iO academy logo" />
-                <h1 className="text-4xl p-1 text-center">Todays Visitors</h1>
+                <h1 className="text-4xl p-1 text-center">Today's Visitors</h1>
+                <p></p>
             </div>
                 <div className="flex flex-wrap justify-center items-center gap-3 mx-auto">
                     {visitors?.map((visitor, index) => {
@@ -32,7 +33,6 @@ const AdminToday = () => {
                     }) ?? <p className="text-center pt-10">Loading...</p>
                     }
             </div>
-
         </>
     )
 }
