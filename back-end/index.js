@@ -36,13 +36,12 @@ app.use((request, response, next) => {
   
 app.use(session({
 
-    secret: 'your-secret-key', // replace with your own secret key
+    secret: 'your-secret-key', 
     resave: false,
     saveUninitialized: false,
-    store: store, // Use MongoDBStore as the session store
-    expires: 10,// session expires after 50 minutes
+    store: store, 
     cookie: {
-        maxAge: 3000000, // session timeout in milliseconds, e.g., 50 minutes
+        maxAge: 300000, // e.g., 5 minutes
         httpOnly: false
     }
 }
