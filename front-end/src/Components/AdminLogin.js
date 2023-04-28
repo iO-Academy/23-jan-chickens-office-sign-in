@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
@@ -6,8 +5,7 @@ import { useCookies } from 'react-cookie'
 
 
 const AdminLogin = (props) => {
-    const [cookies, setCookie, removeCookie] = useCookies()
-    const [passcode, setPasscode] = useState([])
+    const [cookies, setCookie, ] = useCookies()
     const navigate = useNavigate()
 
     const attemptLogin = (value) => {
@@ -22,7 +20,6 @@ const AdminLogin = (props) => {
                 if (cookies) {
                     setCookie(cookies)
                 }
-                console.log(cookies)
                 if (response.status === 200) {
                     navigate("/admin")
                 } else if (response.status === 401) {
@@ -52,7 +49,6 @@ const AdminLogin = (props) => {
                     initialValue=""
                     secret
                     secretDelay={100}
-                    onChange={value => setPasscode(value)}
                     type="numeric"
                     inputMode="number"
                     focus
@@ -63,7 +59,6 @@ const AdminLogin = (props) => {
                     regexCriteria={/[0-9]{4}/}
                 />
             </div>
-            <p>{passcode}</p>
         </>
     )
 }

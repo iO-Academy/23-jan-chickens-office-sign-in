@@ -9,7 +9,7 @@ const { store } = require('./service/DatabaseService')
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-const allowedOrigins = ['http://localhost:3002'];
+const allowedOrigins = ['http://localhost:3000'];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin)) {

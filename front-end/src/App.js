@@ -8,16 +8,19 @@ import Admin from './Components/Admin'
 import AdminLoginFailure from './Components/AdminLoginFailure'
 import NoMatch from './Components/NoMatch'
 import AdminToday from './Components/AdminToday'
+import BulkSignoutSuccess from './Components/BulkSignoutSuccess'
+import BulkSignoutFailure from './Components/BulkSignoutFailure'
 import AdminHistory from './Components/AdminHistory'
 import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
+import SignOutSuccess from './Components/SignOutSuccess'
+import SignOutFailure from './Components/SignOutFailure'
 
-import { useState } from 'react'
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 function App() {
 
-const [cookies, setCookie, removeCookie] = useCookies()
+const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>
@@ -27,11 +30,15 @@ const [cookies, setCookie, removeCookie] = useCookies()
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
         <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
         <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/bulk-sign-out-success" element={cookies.authorized ? <BulkSignoutSuccess /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/bulk-sign-out-failure" element={cookies.authorized ? <BulkSignoutFailure /> : <Navigate to="/admin-login" />} />
         <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
-        <Route path="/sign-out/*" element={<SignOut />} />
+        <Route path="/sign-out/" element={<SignOut />} />
+        <Route path="/sign-out/success" element={<SignOutSuccess />} />
+        <Route path="/sign-out/failure" element={<SignOutFailure />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>

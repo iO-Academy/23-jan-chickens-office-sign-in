@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom"
 
-const SignInFailure = () => {
+const SignOutFailure = () => {
 
     const navigate = useNavigate()
     const handleButtonClick = () => {
@@ -20,4 +20,4 @@ const SignInFailure = () => {
     )
 }
 
-export default SignInFailure
+export default SignOutFailure
