@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom"
 
-const AdminTodayFailure = () => {
+const BulkSignoutFailure = () => {
 
     const navigate = useNavigate()
     const handleButtonClick = () => {
@@ -20,4 +20,4 @@ const AdminTodayFailure = () => {
     )
 }
 
-export default AdminTodayFailure
+export default BulkSignoutFailure

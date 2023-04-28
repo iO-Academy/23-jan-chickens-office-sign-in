@@ -79,10 +79,10 @@ const getVisitorsBySignIn = async (request, response) => {
     try {
         if (request.query.signedIn === "true" || request.query.signedIn === "false") {
             const signedInBool = request.query.signedIn === "true" ? true : false
+            const today = new Date().toISOString().substring(0, 10)
             const collection = await getCollection("OfficeSignIn", "Visitors")
-
             if (Object.keys(request.query).length == 1) {
-                let data = await collection.find({ signedIn: { $in: [signedInBool] } }).toArray()
+                let data = await collection.find({ signedIn: signedInBool }).toArray()
                 return response.status(200).json({
                     message: "Successfully retrieved visitors",
                     data: data

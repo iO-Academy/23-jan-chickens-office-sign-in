@@ -7,7 +7,7 @@ const Admin = (props) => {
     const [cookies, setCookie, removeCookie] = useCookies()
 
     const handleLogout = () => {
-        removeCookie('authorized',{path:'/'});
+        removeCookie('authorized', { path: '/' });
         navigate("/")
     }
 
