@@ -1,6 +1,5 @@
-const express = require('express')
-const session = require('express-session')
 const { getCollection, store } = require('./service/DatabaseService')
+const { ObjectId } = require('mongodb')
 const { v4: uuidv4 } = require('uuid')
 
 const addNewVisitor = async (request, response) => {
@@ -9,7 +8,7 @@ const addNewVisitor = async (request, response) => {
         const name = request.body.name
         const signInTime = request.body.signInTime
         const date = request.body.date
-        if (name && signInTime && date && name.length<100) {
+        if (name && signInTime && date && name.length < 100) {
             const newVisitor = {
                 name: name,
                 date: date,
@@ -30,7 +29,7 @@ const addNewVisitor = async (request, response) => {
                 data: []
             })
         }
-    } catch(error) {
+    } catch (error) {
         return response.status(500).json({
             message: "Unexpected error",
             data: []
@@ -40,29 +39,129 @@ const addNewVisitor = async (request, response) => {
 
 const getAdminAuthorization = async (request, response) => {
     const loginInput = request.body.passcode
-    if (loginInput === '1234') { 
-        
-        //generate a random id
-        const sessionId = uuidv4()
+    if (loginInput === '1234') {
 
-        // Store the sessionId in MongoDB, 
-        // using `store` from DataBaseService.js
+        const sessionId = uuidv4()
         await store.set(sessionId, { admin: true })
 
-        // Set the sessionId in the session object
-        request.session.adminSessionId = sessionId;
+        request.session['adminSessionId'] = sessionId
+        response.setHeader('access-control-expose-headers', 'Set-Cookie');
+        response.cookie('authorized', sessionId, {
+            maxAge: 900000,
+            secure: false
+        })
         response.status(200).json(
-            { 
+            {
                 message: 'Authorization successful',
-                data: []    
+                data: []
             })
     } else {
         response.status(401).json(
-            { 
+            {
                 message: 'Authorization failed',
-                data: []    
+                data: []
+            })
+    }
+}
+
+const getVisitorsBySignIn = async (request, response) => {
+    try {
+        if (request.query.signedIn === "true" || request.query.signedIn === "false") {
+            const signedInBool = request.query.signedIn === "true" ? true : false
+            const today = new Date().toISOString().substring(0, 10)
+            const collection = await getCollection("OfficeSignIn", "Visitors")
+            if (Object.keys(request.query).length == 1) {
+                let data = await collection.find({ signedIn: signedInBool }).toArray()
+                return response.status(200).json({
+                    message: "Successfully retrieved visitors",
+                    data: data
+                })
+            }
+        } else {
+            return response.status(400).json({
+                message: "Bad data type provided.",
+                data: []
             })
         }
-  }
-  
-module.exports = { addNewVisitor, getAdminAuthorization }
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+}
+
+const signOutAllVisitors = async (request, response) => {
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        await collection.updateMany(
+            { signedIn: true },
+            {
+                $currentDate: {
+                    signOutTime: true
+                }, $set: { signedIn: false }
+            }
+        )
+        return response.status(200).json({
+            message: "Successfully signed out visitors.",
+            data: []
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+}
+
+
+const signOutOneVisitorById = async (request, response) => {
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const visitorId = request.params.id
+        await collection.updateOne(
+            { _id: new ObjectId(visitorId) },
+            {
+                $currentDate: {
+                    signOutTime: true
+                }, $set: { signedIn: false }
+            }
+        )
+        return response.status(200).json({
+            message: "Successfully signed out visitor.",
+            data: []
+        })
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+}
+
+const getVisitorsByName = async (request, response) => {
+    try {
+        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const name = request.params.name
+        let data = await collection.find({ name: name, signedIn: true }).toArray()
+        if (data.length) {
+            return response.status(200).json({
+                message: "Successfully retrieved visitors by name.",
+                data: data
+            })
+        } else {
+            return response.status(404).json({
+                message: "Unknown name provided.",
+                data: []
+            })
+        }
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
+    }
+
+}
+
+module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName }

@@ -10,9 +10,10 @@ async function getCollection(db, collection) {
     return result
 }
 
+// create sessions store 
 const store = new MongoDBStore({
     uri: mongoUrl, // replace with your MongoDB connection URI
-     collection: 'sessions' // name of the collection where session data will be stored
+    collection: 'sessions', // name of the collection where session data will be stored
 })
 
 module.exports = { getCollection, store }

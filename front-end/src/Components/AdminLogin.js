@@ -1,29 +1,41 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import iOLogo from '../../io-logo.jpg'
+import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
+import { useCookies } from 'react-cookie'
 
-const AdminLogin = () => {
-    const [pin, setPin] = useState([])
+
+const AdminLogin = (props) => {
+    const [cookies, setCookie, ] = useCookies()
     const navigate = useNavigate()
-    // const handleSubmit = (event) => {
-    //     event.preventDefault()
-    //     const pincodeString = firstNumber + secondNumber + thirdNumber + fourthNumber
-    //     // fetch("/admin-login", {
-    //     //     method: "POST",
-    //     //     headers:{"Content-Type": "application/json"},
-    //     //     body: JSON.encode(pincodeString)
-    //     // })
-    //     // .then(response => response.json())
-    //     // .then((data) => {
-    //     //     //set the session.id here, record as state in app
-    //     // })
 
-    //     navigate("/admin")
-    // }
+    const attemptLogin = (value) => {
+
+        fetch("http://localhost:3001/verify", {
+            method: "POST",
+            credentials: 'include',
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ passcode: value }),
+        })
+            .then((response) => {
+                if (cookies) {
+                    setCookie(cookies)
+                }
+                if (response.status === 200) {
+                    navigate("/admin")
+                } else if (response.status === 401) {
+                    navigate("/admin-login/incorrect")
+                } else {
+                    navigate("/admin-login/failure")
+                }
+            })
+
+    }
+
+
+
     return (
         <>
-            <nav className="bg-amber-300 p-4 flex flex-row">
+            <nav className="bg-amber-300 p-4">
                 <Link className="ease-in-out delay-150 delay-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
             </nav>
             <div className="flex flex-col gap-4 items-center justify-center pt-10">
@@ -37,18 +49,16 @@ const AdminLogin = () => {
                     initialValue=""
                     secret
                     secretDelay={100}
-                    onChange={value => setPin(value)}
                     type="numeric"
                     inputMode="number"
                     focus
                     inputStyle={{ borderColor: 'black' }}
                     inputFocusStyle={{ borderColor: 'orange' }}
-                    onComplete={()=> {navigate("/admin")}}
+                    onComplete={value => attemptLogin(value)}
                     autoSelect={true}
                     regexCriteria={/[0-9]{4}/}
                 />
             </div>
-            <p>{pin}</p>
         </>
     )
 }

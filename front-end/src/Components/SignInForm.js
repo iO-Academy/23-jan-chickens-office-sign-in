@@ -27,9 +27,9 @@ const SignInForm = () => {
             }
         }
         ).then((response) => {
-            response.status === 200 ?
-                navigate("/sign-in/success") :
-                navigate("/sign-in/failure")
+            response.status !== 200 ?
+            navigate("/sign-in/failure"):
+            navigate("/sign-in/success") 
         })
     }
 

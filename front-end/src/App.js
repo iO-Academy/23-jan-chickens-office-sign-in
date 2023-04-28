@@ -1,38 +1,45 @@
-import { useState } from 'react'
-import Home from './components/Home/Home'
-import SignOut from './components/SignOut/SignOut'
-import SignIn from './components/SignIn/SignIn'
-import SignInSuccess from './components/SignIn/SignInSuccess/SignInSuccess';
-import SignInFailure from './components/SignIn/SignInFailure/SignInFailure';
-import AdminLogin from './components/AdminLogin/AdminLogin'
-import Admin from './components/Admin/Admin'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import Home from './Components/Home'
+import SignOut from './Components/SignOut'
+import SignIn from './Components/SignIn'
+import SignInSuccess from './Components/SignInSuccess'
+import SignInFailure from './Components/SignInFailure'
+import AdminLogin from './Components/AdminLogin'
+import Admin from './Components/Admin'
+import AdminLoginFailure from './Components/AdminLoginFailure'
+import NoMatch from './Components/NoMatch'
+import AdminToday from './Components/AdminToday'
+import BulkSignoutSuccess from './Components/BulkSignoutSuccess'
+import BulkSignoutFailure from './Components/BulkSignoutFailure'
+import AdminHistory from './Components/AdminHistory'
+import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
+import SignOutSuccess from './Components/SignOutSuccess'
+import SignOutFailure from './Components/SignOutFailure'
+
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 
 function App() {
 
-  const [sessionId, setSessionId] = useState(false)
-  const checkSession = (nextState, replace, next) => {
-    //fetch get request to /checkLogin
-    let authenticated = false
-    if (!authenticated) {
-      replace({
-        pathname: "/admin-login",
-        state: { nextPathname: nextState.location.pathname }
-      })
-    }
-    next()
-  }
-
+const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin-login" element={<AdminLogin />} />
-        <Route path="/admin" element={<Admin />} onEnter={checkSession} />
+        <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
+        <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
+        <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/bulk-sign-out-success" element={cookies.authorized ? <BulkSignoutSuccess /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/today/bulk-sign-out-failure" element={cookies.authorized ? <BulkSignoutFailure /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
-        <Route path="/sign-out/*" element={<SignOut />} />
+        <Route path="/sign-out/" element={<SignOut />} />
+        <Route path="/sign-out/success" element={<SignOutSuccess />} />
+        <Route path="/sign-out/failure" element={<SignOutFailure />} />
+        <Route path="*" element={<NoMatch />} />
       </Routes>
     </BrowserRouter>
   );
