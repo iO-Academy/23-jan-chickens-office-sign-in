@@ -5,7 +5,7 @@ const { v4: uuidv4 } = require('uuid')
 const addNewVisitor = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        const name = request.body.name
+        const name = request.body.name.toLowerCase()
         const signInTime = request.body.signInTime
         const date = request.body.date
         if (name && signInTime && date && name.length < 100) {
@@ -148,7 +148,7 @@ const signOutOneVisitorById = async (request, response) => {
 const getVisitorsByName = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        const name = request.params.name
+        const name = request.params.name.toLowerCase()
         let data = await collection.find({ name: name, signedIn: true }).toArray()
         if (data.length) {
             return response.status(200).json({
