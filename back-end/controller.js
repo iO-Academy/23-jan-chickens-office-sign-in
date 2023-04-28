@@ -48,18 +48,14 @@ const getAdminAuthorization = async (request, response) => {
         // Store the sessionId in MongoDB, 
         // using `store` from DataBaseService.js
         await store.set(sessionId, { admin: true })
+        request.session.destroy()
 
         // Set the sessionId in the session object
         request.session['adminSessionId'] = sessionId
-        // console.dir("request.session: " + JSON.stringify(request.session))
         response.setHeader('access-control-expose-headers', 'Set-Cookie');
         response.cookie('authorized', sessionId, {
             maxAge: 900000,
             secure: false
-        })
-        //log what's in the store
-        store.all((error, sessions) => {
-            sessions.forEach((element) => console.log("session: " + JSON.stringify(element)))
         })
         response.status(200).json(
             {
@@ -123,16 +119,17 @@ const signOutAllVisitors = async (request, response) => {
 
 
 const signOutOneVisitorById = async (request, response) => {
-    console.log('before try')
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const visitorId = request.params.id
-        console.log(JSON.stringify(request.params))
         await collection.updateOne(
             { _id: new ObjectId(visitorId) },
-            { $set: { signedIn: false } }
+            {
+                $currentDate: {
+                    signOutTime: true
+                }, $set: { signedIn: false }
+            }
         )
-        console.log('before return')
         return response.status(200).json({
             message: "Successfully signed out visitor.",
             data: []
@@ -146,28 +143,21 @@ const signOutOneVisitorById = async (request, response) => {
 }
 
 const getVisitorsByName = async (request, response) => {
-    console.log("before try")
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        console.log("request.params: ")
-        console.dir(request.params)
-        console.log("request.params.name: ")
-        console.dir(request.params.name)
         const name = request.params.name
-        let data = await collection.find( {name: name, signedIn: true} ).toArray()
-        console.log(typeof data)
-        console.log(data.length)
-        if(data.length) {
-        return response.status(200).json({
-            message: "Successfully retrieved visitors by name.",
-            data: data
-        })
-    } else {
-        return response.status(404).json({
-            message: "Unknown name provided.",
-            data: []
-        })
-    }
+        let data = await collection.find({ name: name, signedIn: true }).toArray()
+        if (data.length) {
+            return response.status(200).json({
+                message: "Successfully retrieved visitors by name.",
+                data: data
+            })
+        } else {
+            return response.status(404).json({
+                message: "Unknown name provided.",
+                data: []
+            })
+        }
     } catch (error) {
         return response.status(500).json({
             message: "Unexpected error",
@@ -178,46 +168,3 @@ const getVisitorsByName = async (request, response) => {
 }
 
 module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName }
-
-
-// getVisitorsByName
-// method: get
-// URL: /visitors
-// Query parameters: name=[string]
-// Example: /visitors?name=BIll
-// Success response:
-// Code: 200
-// Content
-// {
-// message: "Successfully retrieved visitors by name.",
-// data: [
-// {...},
-// {...}
-// ]
-// }
-// Error response:
-// Code: 500
-// Content
-// {
-// message: "Unexpected error.",
-// data: []
-// }
-// Code: 404
-// {
-// message: "Unknown name provided.",
-// data: []
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
