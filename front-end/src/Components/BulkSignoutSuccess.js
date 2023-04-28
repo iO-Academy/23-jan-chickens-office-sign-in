@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom"
 import iOLogo from "../io-logo.jpg"
-const AdminTodaySuccess = () => {
+const BulkSignoutSuccess
+ = () => {
     const navigate = useNavigate()
     const handleButtonClick = () => {
         navigate("/")
@@ -22,4 +23,4 @@ const AdminTodaySuccess = () => {
     )
 }
 
-export default AdminTodaySuccess
+export default BulkSignoutSuccess

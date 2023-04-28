@@ -48,7 +48,6 @@ const getAdminAuthorization = async (request, response) => {
         // Store the sessionId in MongoDB, 
         // using `store` from DataBaseService.js
         await store.set(sessionId, { admin: true })
-        request.session.destroy()
 
         // Set the sessionId in the session object
         request.session['adminSessionId'] = sessionId
