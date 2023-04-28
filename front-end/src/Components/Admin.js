@@ -12,7 +12,7 @@ const Admin = (props) => {
     }
 
     return (
-        <>
+        <div>
             <nav className="bg-amber-300 p-4">
                 <button className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleLogout}>Logout</button>
             </nav>
@@ -24,7 +24,7 @@ const Admin = (props) => {
                 <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="today">Today</Link>
                 <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="history">History</Link>
             </div>
-        </>
+        </div>
     )
 }
 
