@@ -19,6 +19,25 @@ const AdminToday = () => {
         })
     }
 
+    const handleSignoutClick = (event) => {
+        const id = event.target.id
+        fetch('http://localhost:3001/visitors/' + id
+            , {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            }).then((response) => {
+                response.status !== 200 ?
+                    navigate("/sign-out/failure") :
+                    navigate("/sign-out/success")
+            })
+
+    }
+
+
+    
+
 
     useEffect(() => {
         fetch("http://localhost:3001/visitors?signedIn=true")
@@ -45,6 +64,7 @@ const AdminToday = () => {
                         <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
                         <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
                         <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
+                        <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign me out" onClick={handleSignoutClick} />
                     </div>)
                 }) ?? <p className="text-center pt-10">Loading...</p>
                 }
