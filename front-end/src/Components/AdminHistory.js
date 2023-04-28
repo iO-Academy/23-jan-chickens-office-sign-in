@@ -28,9 +28,9 @@ const AdminHistory = () => {
                         return (<div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
                             <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
                             <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                            <p className="w-full px-4 py-2 rounded-b-lg">Date in: {visitor.date}</p>
-                            <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                            <p className="w-full px-4 py-2 rounded-b-lg">Time out: {visitor.signOutTime?.substring(11, 16)}</p>
+                            <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.date}</p>
+                            <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
+                            <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime?.substring(11, 16)}</p>
                         </div>)
                     }) ?? <p className="text-center pt-10">Loading...</p>
                     }
