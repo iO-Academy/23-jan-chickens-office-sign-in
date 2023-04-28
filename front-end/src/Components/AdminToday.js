@@ -13,7 +13,7 @@ const AdminToday = () => {
                 "Content-Type": "application/json"
             }
         }).then((response) => {
-            response.status !== 200 ?
+            response.status == 200 ?
             navigate("/admin/today/bulk-sign-out-success"):
             navigate("/admin/today/bulk-sign-out-failure") 
         })
