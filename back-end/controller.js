@@ -94,9 +94,13 @@ const getVisitorsBySignIn = async (request, response) => {
 const signOutAllVisitors = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        await collection.updateOne(
+        await collection.updateMany(
             { signedIn: true },
-            { $set: { signedIn: false } }
+            {
+                $currentDate: {
+                    signOutTime: true
+                }, $set: { signedIn: false }
+            }
         )
         return response.status(200).json({
             message: "Successfully signed out visitors.",
