@@ -30,7 +30,7 @@ const AdminHistory = () => {
                             <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
                             <p className="w-full px-4 py-2 rounded-b-lg">Date in: {visitor.date}</p>
                             <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                            <p className="w-full px-4 py-2 rounded-b-lg">Time out: {visitor.signOutTime}</p>
+                            <p className="w-full px-4 py-2 rounded-b-lg">Time out: {visitor.signOutTime?.substring(11, 16)}</p>
                         </div>)
                     }) ?? <p className="text-center pt-10">Loading...</p>
                     }
