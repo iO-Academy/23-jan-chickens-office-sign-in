@@ -149,7 +149,7 @@ const getVisitorsByName = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.params.name
-        let data = await collection.find({ name: name, signedIn: true }).toArray()
+        let data = await collection.find({ name: new RegExp("^" + name + "$", "i"), signedIn: true }).toArray()
         if (data.length) {
             return response.status(200).json({
                 message: "Successfully retrieved visitors by name.",
