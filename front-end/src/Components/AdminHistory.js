@@ -29,7 +29,7 @@ const AdminHistory = () => {
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.date}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime?.substring(11, 16)}</p>
+                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime}</p>
                         </div>)
                     }) ?? <p className="text-center pt-10">Loading...</p>
                     }
