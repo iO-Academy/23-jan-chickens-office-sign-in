@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom"
 const SignInForm = () => {
 
     const today = new Date()
+    today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000)
     const defaultDate = today.toISOString().substring(0, 10)
-    const defaultTime = today.toISOString().substring(11, 16);
+    const defaultTime = today.toISOString().substring(11, 16)
     const navigate = useNavigate()
     const [name, setName] = useState(null)
     const [company, setCompany] = useState(null)

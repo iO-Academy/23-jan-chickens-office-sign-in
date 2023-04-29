@@ -118,13 +118,19 @@ const signOutAllVisitors = async (request, response) => {
 const signOutOneVisitorById = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
+        const today = new Date()
+        today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000)
+        const signOutTime = today.toISOString().substring(11, 16)
+        console.log(signOutTime)
         const visitorId = request.params.id
         await collection.updateOne(
             { _id: new ObjectId(visitorId) },
             {
-                $currentDate: {
-                    signOutTime: true
-                }, $set: { signedIn: false }
+                $set: {
+                    signedIn: false,
+                    signOutTime: signOutTime
+
+                }
             }
         )
         return response.status(200).json({
