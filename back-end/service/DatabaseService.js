@@ -1,4 +1,4 @@
-const mongoUrl = 'mongodb://root:password@localhost:27017'
+const mongoUrl = ''// Add MongoDB connection URI
 const { MongoClient } = require('mongodb')
 const express = require('express')
 const session = require('express-session')
@@ -12,7 +12,7 @@ async function getCollection(db, collection) {
 
 // create sessions store 
 const store = new MongoDBStore({
-    uri: mongoUrl, // replace with your MongoDB connection URI
+    uri: mongoUrl,
     collection: 'sessions', // name of the collection where session data will be stored
 })
 

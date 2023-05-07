@@ -1,8 +1,10 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
 const { v4: uuidv4 } = require('uuid')
+const session = require('express-session')
 
 const addNewVisitor = async (request, response) => {
+    store.all((error, sessions) => {sessions.forEach((session) => console.dir(session))})
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.body.name
@@ -38,24 +40,29 @@ const addNewVisitor = async (request, response) => {
 }
 
 const getAdminAuthorization = async (request, response) => {
+    store.all((error, sessions) => {sessions.forEach((session) => console.dir(session))})
     const loginInput = request.body.passcode
     if (loginInput === '1234') {
 
-        const sessionId = uuidv4()
-        await store.set(sessionId, { admin: true })
 
-        request.session['adminSessionId'] = sessionId
+        //const sessionId = uuidv4()
+        //await store.set(sessionId, { admin: true })
+
+        //request.session['adminSessionId'] = sessionId
         response.setHeader('access-control-expose-headers', 'Set-Cookie');
-        response.cookie('authorized', sessionId, {
-            maxAge: 900000,
-            secure: false
-        })
+        //response.cookie('authorized', sessionId, {
+        //    maxAge: 900000,
+        //    secure: false
+        //})
+        request.session.authorised = true
+        console.dir(request.session)
         response.status(200).json(
             {
                 message: 'Authorization successful',
                 data: []
             })
     } else {
+        console.dir(request.session)
         response.status(401).json(
             {
                 message: 'Authorization failed',
