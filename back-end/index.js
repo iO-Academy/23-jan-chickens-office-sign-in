@@ -38,10 +38,8 @@ app.use(express.urlencoded({ extended: true }))
 // })
 app.set('trust proxy', 1)
 app.use(function(request, response, next) {
-    //response.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
-      response.setHeader("Access-Control-Allow-Origin", "http://localhost:3002")
-    //response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-      response.header("Access-Control-Allow-Headers", "content-type")
+      response.header("Access-Control-Allow-Origin", "http://localhost:3002")// update to match the domain you will make the request from
+    response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
       response.header("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS")
       response.header('Access-Control-Allow-Credentials', 'true')
         next();
