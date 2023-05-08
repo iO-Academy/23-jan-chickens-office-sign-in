@@ -1,10 +1,9 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
-const { v4: uuidv4 } = require('uuid')
+//const { v4: uuidv4 } = require('uuid')
 const session = require('express-session')
 
 const addNewVisitor = async (request, response) => {
-    store.all((error, sessions) => {sessions.forEach((session) => console.dir(session))})
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.body.name
@@ -40,29 +39,16 @@ const addNewVisitor = async (request, response) => {
 }
 
 const getAdminAuthorization = async (request, response) => {
-    store.all((error, sessions) => {sessions.forEach((session) => console.dir(session))})
     const loginInput = request.body.passcode
     if (loginInput === '1234') {
-
-
-        //const sessionId = uuidv4()
-        //await store.set(sessionId, { admin: true })
-
-        //request.session['adminSessionId'] = sessionId
-        response.setHeader('access-control-expose-headers', 'Set-Cookie');
-        //response.cookie('authorized', sessionId, {
-        //    maxAge: 900000,
-        //    secure: false
-        //})
+        response.setHeader('access-control-expose-headers', 'Set-Cookie')
         request.session.authorised = true
-        console.dir(request.session)
         response.status(200).json(
             {
                 message: 'Authorization successful',
                 data: []
             })
     } else {
-        console.dir(request.session)
         response.status(401).json(
             {
                 message: 'Authorization failed',
@@ -126,7 +112,7 @@ const signOutOneVisitorById = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const today = new Date()
-        today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000)
+        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
         const signOutTime = today.toISOString().substring(11, 16)
         console.log(signOutTime)
         const visitorId = request.params.id
@@ -177,4 +163,31 @@ const getVisitorsByName = async (request, response) => {
 
 }
 
-module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName }
+const destroyAdminAuthorization = async (request, response) => {
+    // request.session.destroy(function (err) {
+    //     console.log('Destroyed session')
+    // })
+    request.session.destroy()
+    store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
+    response.redirect('/');
+}
+
+const optionControl = async (request, response) => {
+    //res.header('Access-Control-Allow-Origin', '*');
+    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    //res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+    response.send(200);
+}
+
+const clearSessionStore = async (request, response) => {
+    store.clear((error) => {
+        console.log("Session store cleared")
+    })
+    store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
+    return response.status(200).json({
+        message: 'Session store cleared.',
+        data: []
+    })
+}
+
+module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName, destroyAdminAuthorization, optionControl, clearSessionStore }
