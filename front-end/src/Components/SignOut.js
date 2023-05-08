@@ -29,10 +29,20 @@ const SignOut = () => {
     }
 
     const handleSignoutClick = (event) => {
+        const today = new Date()
+        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+        const visitorSignOutDate = today.toISOString().substring(0, 10)
+        const visitorSignOutTime = today.toISOString().substring(11, 16)
+        const requestBody = {
+            signOutDate: visitorSignOutDate,
+            signOutTime: visitorSignOutTime
+        }
+
         const id = event.target.id
         fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
             , {
                 method: "PUT",
+                body: JSON.stringify(requestBody),
                 headers: {
                     "Content-Type": "application/json"
                 }

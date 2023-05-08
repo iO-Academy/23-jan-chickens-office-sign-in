@@ -6,9 +6,19 @@ const AdminToday = () => {
     const navigate = useNavigate()
 
     const handleBulkSignout = (event) => {
+        const today = new Date()
+        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+        const bulkSignOutDate = today.toISOString().substring(0, 10)
+        const bulkSignOutTime = today.toISOString().substring(11, 16)
+        const requestBody = {
+            signOutDate: bulkSignOutDate,
+            signOutTime: bulkSignOutTime
+        }
+
         fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors', {
             method: 'PUT',
             credentials: 'include',
+            body: JSON.stringify(requestBody),
             headers: {
                 "Content-Type": "application/json"
             }

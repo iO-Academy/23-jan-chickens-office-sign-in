@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
 const AdminHistory = () => {
@@ -10,7 +10,7 @@ const AdminHistory = () => {
         fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
             method: "GET",
             credentials: 'include',
-        })//"http://localhost:3001/visitors?signedIn=false"
+        })
             .then((response) => {
                 if (response.status == 200) {
                     return response.json()
@@ -38,8 +38,9 @@ const AdminHistory = () => {
                         <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
                             <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.date}</p>
+                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.signInDate}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
+                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutDate}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime}</p>
                         </div>)
                 }) ?? <p className="text-center pt-10">Loading...</p>
