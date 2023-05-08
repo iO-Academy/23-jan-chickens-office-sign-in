@@ -3,10 +3,21 @@ import { useState, useEffect } from 'react'
 
 const AdminHistory = () => {
     const [visitors, setVisitors] = useState(null)
+    const navigate = useNavigate()
+
 
     useEffect(() => {
-        fetch("http://localhost:3001/visitors?signedIn=false")
-            .then(response => response.json())
+        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
+            method: "GET",
+            credentials: 'include',
+        })//"http://localhost:3001/visitors?signedIn=false"
+            .then((response) => {
+                if (response.status == 200) {
+                    return response.json()
+                } else {
+                    navigate("/admin-login")
+                }
+            })
             .then((data) => {
                 setVisitors(data.data.reverse())
             })
@@ -21,9 +32,9 @@ const AdminHistory = () => {
                 <h1 className="text-4xl p-1 text-center">Visitor History</h1>
                 <p></p>
             </div>
-                <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
-                    {visitors?.map((visitor, index) => {
-                        return (
+            <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
+                {visitors?.map((visitor, index) => {
+                    return (
                         <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
                             <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
@@ -31,8 +42,8 @@ const AdminHistory = () => {
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime}</p>
                         </div>)
-                    }) ?? <p className="text-center pt-10">Loading...</p>
-                    }
+                }) ?? <p className="text-center pt-10">Loading...</p>
+                }
             </div>
         </>
     )

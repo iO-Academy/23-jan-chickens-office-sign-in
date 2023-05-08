@@ -12,7 +12,7 @@ const SignOut = () => {
         event.preventDefault()
 
         const name = event.target.name.value
-        fetch('http://localhost:3001/visitors/' + name, {
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -30,7 +30,7 @@ const SignOut = () => {
 
     const handleSignoutClick = (event) => {
         const id = event.target.id
-        fetch('http://localhost:3001/visitors/' + id
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
             , {
                 method: "PUT",
                 headers: {

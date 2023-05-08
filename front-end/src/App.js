@@ -16,11 +16,11 @@ import SignOutSuccess from './Components/SignOutSuccess'
 import SignOutFailure from './Components/SignOutFailure'
 
 import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
+//import { useCookies } from 'react-cookie'
 
 function App() {
 
-const [cookies, , ] = useCookies()
+//const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>
@@ -28,11 +28,11 @@ const [cookies, , ] = useCookies()
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
-        <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today/bulk-sign-out-success" element={cookies.authorized ? <BulkSignoutSuccess /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today/bulk-sign-out-failure" element={cookies.authorized ? <BulkSignoutFailure /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/today" element={<AdminToday />} />
+        <Route path="/admin/today/bulk-sign-out-success" element={ <BulkSignoutSuccess />} />
+        <Route path="/admin/today/bulk-sign-out-failure" element={<BulkSignoutFailure />} />
+        <Route path="/admin/history" element={ <AdminHistory />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
