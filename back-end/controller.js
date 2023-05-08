@@ -1,6 +1,5 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
-//const { v4: uuidv4 } = require('uuid')
 const session = require('express-session')
 
 const addNewVisitor = async (request, response) => {
@@ -61,7 +60,7 @@ const getVisitorsBySignIn = async (request, response) => {
     try {
         if (request.query.signedIn === "true" || request.query.signedIn === "false") {
             const signedInBool = request.query.signedIn === "true" ? true : false
-            const today = new Date().toISOString().substring(0, 10)
+            //const today = new Date().toISOString().substring(0, 10)
             const collection = await getCollection("OfficeSignIn", "Visitors")
             if (Object.keys(request.query).length == 1) {
                 let data = await collection.find({ signedIn: signedInBool }).toArray()
@@ -87,12 +86,12 @@ const getVisitorsBySignIn = async (request, response) => {
 const signOutAllVisitors = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
+        bulkSignOutDate = request.body.signOutDate
+        bulkSignOutTime = request.body.signOutTime
         await collection.updateMany(
             { signedIn: true },
             {
-                $currentDate: {
-                    signOutTime: true
-                }, $set: { signedIn: false }
+                $set: { signedIn: false, signOutDate: bulkSignOutDate, signOutTime: bulkSignOutTime }
             }
         )
         return response.status(200).json({
@@ -111,17 +110,19 @@ const signOutAllVisitors = async (request, response) => {
 const signOutOneVisitorById = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        const today = new Date()
-        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-        const signOutTime = today.toISOString().substring(11, 16)
-        console.log(signOutTime)
+        // const today = new Date()
+        // today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+        // const signOutTime = today.toISOString().substring(11, 16)
+        // console.log(signOutTime)
+        visitorSignOutDate = request.body.signOutDate
+        visitorSignOutTime = request.body.signOutTime
         const visitorId = request.params.id
         await collection.updateOne(
             { _id: new ObjectId(visitorId) },
             {
                 $set: {
                     signedIn: false,
-                    signOutTime: signOutTime
+                    signOutTime: visitorSignOutTime
 
                 }
             }
@@ -164,19 +165,13 @@ const getVisitorsByName = async (request, response) => {
 }
 
 const destroyAdminAuthorization = async (request, response) => {
-    // request.session.destroy(function (err) {
-    //     console.log('Destroyed session')
-    // })
     request.session.destroy()
     store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
-    response.redirect('/');
+    response.status(200).send()
 }
 
 const optionControl = async (request, response) => {
-    //res.header('Access-Control-Allow-Origin', '*');
-    //res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
-    //res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-    response.send(200);
+    response.status(200).send()
 }
 
 const clearSessionStore = async (request, response) => {
