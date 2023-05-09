@@ -3,16 +3,15 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const SignOut = () => {
-
     const navigate = useNavigate()
     const [, setName] = useState(null)
     const [visitorsByName, setVisitorsByName] = useState(null)
     
     const handleNameSearch = (event) => {
         event.preventDefault()
-
         const name = event.target.name.value
-        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
+
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -39,7 +38,7 @@ const SignOut = () => {
         }
 
         const id = event.target.id
-        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
             , {
                 method: "PUT",
                 body: JSON.stringify(requestBody),
@@ -51,7 +50,6 @@ const SignOut = () => {
                     navigate("/sign-out/failure") :
                     navigate("/sign-out/success")
             })
-
     }
 
     return (
@@ -89,6 +87,5 @@ const SignOut = () => {
         </>
     )
 }
-
 
 export default SignOut

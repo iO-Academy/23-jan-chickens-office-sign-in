@@ -15,12 +15,10 @@ import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 import SignOutSuccess from './Components/SignOutSuccess'
 import SignOutFailure from './Components/SignOutFailure'
 
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
-//import { useCookies } from 'react-cookie'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
 
-//const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>

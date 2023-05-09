@@ -5,9 +5,8 @@ const AdminHistory = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
 
-
     useEffect(() => {
-        fetch("https://corsapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
+        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
             method: "GET",
             credentials: 'include',
         })

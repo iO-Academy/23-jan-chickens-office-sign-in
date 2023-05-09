@@ -1,12 +1,11 @@
 import { useNavigate, Link } from "react-router-dom";
 import iOLogo from '../io-logo.jpg'
-//import { useCookies } from 'react-cookie'
 
 const Admin = (props) => {
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/adminlogout', {
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/adminlogout', {
             method: "GET",
             credentials: 'include',
             headers: {

@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router-dom"
 
 const AdminError = () => {
-
     const navigate = useNavigate()
+    
     const handleButtonClick = () => {
         navigate("/")
     }

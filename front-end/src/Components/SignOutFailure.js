@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router-dom"
 
 const SignOutFailure = () => {
-
     const navigate = useNavigate()
+    
     const handleButtonClick = () => {
         navigate("/")
     }

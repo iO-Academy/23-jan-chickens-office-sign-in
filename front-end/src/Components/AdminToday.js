@@ -15,7 +15,7 @@ const AdminToday = () => {
             signOutTime: bulkSignOutTime
         }
 
-        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors', {
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors', {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -35,7 +35,7 @@ const AdminToday = () => {
 
     const handleSignoutClick = (event) => {
         const id = event.target.id
-        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
             , {
                 method: "PUT",
                 credentials: 'include',
@@ -51,7 +51,7 @@ const AdminToday = () => {
     }
 
     useEffect(() => {
-        fetch("https://corsapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=true", {
+        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=true", {
             method: "GET",
             credentials: 'include',
         })

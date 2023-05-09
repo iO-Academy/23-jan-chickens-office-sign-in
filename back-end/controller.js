@@ -1,6 +1,5 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
-const session = require('express-session')
 
 const addNewVisitor = async (request, response) => {
     try {
@@ -60,7 +59,6 @@ const getVisitorsBySignIn = async (request, response) => {
     try {
         if (request.query.signedIn === "true" || request.query.signedIn === "false") {
             const signedInBool = request.query.signedIn === "true" ? true : false
-            //const today = new Date().toISOString().substring(0, 10)
             const collection = await getCollection("OfficeSignIn", "Visitors")
             if (Object.keys(request.query).length == 1) {
                 let data = await collection.find({ signedIn: signedInBool }).toArray()
@@ -106,14 +104,9 @@ const signOutAllVisitors = async (request, response) => {
     }
 }
 
-
 const signOutOneVisitorById = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        // const today = new Date()
-        // today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-        // const signOutTime = today.toISOString().substring(11, 16)
-        // console.log(signOutTime)
         visitorSignOutDate = request.body.signOutDate
         visitorSignOutTime = request.body.signOutTime
         const visitorId = request.params.id

@@ -2,6 +2,7 @@ import { useNavigate, Link } from "react-router-dom"
 import iOLogo from "../io-logo.jpg"
 const BulkSignoutSuccess = () => {
     const navigate = useNavigate()
+    
     const handleButtonClick = () => {
         navigate("/")
     }

@@ -1,10 +1,5 @@
-const express = require('express')
-const session = require('express-session')
-const MongoDBStore = require('connect-mongodb-session')(session);
-const app = express()
 const { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName, destroyAdminAuthorization, optionControl, clearSessionStore } = require('./controller.js')
 const { restrictToAdmin } = require('./middleware/restrictToAdmin')
-const { store } = require('./service/DatabaseService')
 
 function routes(app) {
     app.post('/visitors', addNewVisitor)
