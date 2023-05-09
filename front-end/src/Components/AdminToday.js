@@ -5,7 +5,7 @@ const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
 
-    const handleBulkSignout = (event) => {
+    const handleBulkSignout = () => {//event
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
         const bulkSignOutDate = today.toISOString().substring(0, 10)
@@ -33,21 +33,47 @@ const AdminToday = () => {
         })
     }
 
-    const handleSignoutClick = (event) => {
+    // const handleSignoutClick = (event) => {
+    //     const id = event.target.id
+    //     fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+    //         , {
+    //             method: "PUT",
+    //             credentials: 'include',
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             }
+    //         }).then((response) => {
+    //             response.status !== 200 ?
+    //                 navigate("/sign-out/failure") :
+    //                 navigate("/admin")
+    //         })
+
+    // }
+
+    const handleSignoutClick = (event) => {//sign out one visitor FROM SignOut.js
         const id = event.target.id
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+        const today = new Date()
+        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+        const visitorSignOutDate = today.toISOString().substring(0, 10)
+        const visitorSignOutTime = today.toISOString().substring(11, 16)
+        const requestBody = {
+            signOutDate: visitorSignOutDate,
+            signOutTime: visitorSignOutTime
+        }
+
+        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/admin/' + id
             , {
                 method: "PUT",
                 credentials: 'include',
+                body: JSON.stringify(requestBody),
                 headers: {
                     "Content-Type": "application/json"
                 }
             }).then((response) => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
-                    navigate("/admin")
+                    navigate("/sign-out/success")
             })
-
     }
 
     useEffect(() => {

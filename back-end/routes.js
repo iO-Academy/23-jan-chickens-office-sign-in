@@ -8,6 +8,7 @@ function routes(app) {
     app.put('/visitors/:id', signOutOneVisitorById)
     app.get('/visitors/:name', getVisitorsByName)
     app.get('/visitors', restrictToAdmin, getVisitorsBySignIn)
+    app.put('/admin/:id', restrictToAdmin, signOutOneVisitorById)
     app.get('/adminlogout', destroyAdminAuthorization)
     app.options("/*", optionControl)
     app.get('/clear', clearSessionStore)
