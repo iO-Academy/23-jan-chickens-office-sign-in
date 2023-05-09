@@ -17,10 +17,10 @@ const SignInForm = () => {
         const requestBody = {
             name: name,
             company: company,
-            date: date,
+            signInDate: date,
             signInTime: time
         }
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors', {
+        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors', {
             method: "POST",
             body: JSON.stringify(requestBody),
             headers: {

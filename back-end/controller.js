@@ -7,11 +7,11 @@ const addNewVisitor = async (request, response) => {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.body.name
         const signInTime = request.body.signInTime
-        const date = request.body.date
-        if (name && signInTime && date && name.length < 100) {
+        const signInDate = request.body.signInDate
+        if (name && signInTime && signInDate && name.length < 100) {
             const newVisitor = {
                 name: name,
-                date: date,
+                signInDate: signInDate,
                 signInTime: signInTime,
                 signedIn: true
             }
@@ -122,7 +122,8 @@ const signOutOneVisitorById = async (request, response) => {
             {
                 $set: {
                     signedIn: false,
-                    signOutTime: visitorSignOutTime
+                    signOutDate: visitorSignOutDate,
+                    signOutTime: visitorSignOutTime,
 
                 }
             }

@@ -9,7 +9,7 @@ import AdminLoginFailure from './Components/AdminLoginFailure'
 import NoMatch from './Components/NoMatch'
 import AdminToday from './Components/AdminToday'
 import BulkSignoutSuccess from './Components/BulkSignoutSuccess'
-import BulkSignoutFailure from './Components/BulkSignoutFailure'
+import AdminError from './Components/AdminError'
 import AdminHistory from './Components/AdminHistory'
 import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 import SignOutSuccess from './Components/SignOutSuccess'
@@ -28,10 +28,11 @@ function App() {
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
+        <Route path="/admin-logout/failure" element={<AdminError />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/today" element={<AdminToday />} />
         <Route path="/admin/today/bulk-sign-out-success" element={ <BulkSignoutSuccess />} />
-        <Route path="/admin/today/bulk-sign-out-failure" element={<BulkSignoutFailure />} />
+        <Route path="/admin/today/bulk-sign-out-failure" element={<AdminError />} />
         <Route path="/admin/history" element={ <AdminHistory />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />

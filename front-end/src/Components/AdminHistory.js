@@ -7,7 +7,7 @@ const AdminHistory = () => {
 
 
     useEffect(() => {
-        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
+        fetch("https://corsapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
             method: "GET",
             credentials: 'include',
         })
@@ -40,7 +40,7 @@ const AdminHistory = () => {
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.signInDate}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutDate}</p>
+                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date out: {visitor.signOutDate}</p>
                             <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time out: {visitor.signOutTime}</p>
                         </div>)
                 }) ?? <p className="text-center pt-10">Loading...</p>

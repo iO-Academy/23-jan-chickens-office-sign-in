@@ -1,7 +1,7 @@
 const { routes } = require('./routes.js')
 const express = require('express')
 const app = express()
-const port = 3006
+const port = process.env.PORT
 //const cors = require('cors')
 
 //const hostname = '127.0.0.1';

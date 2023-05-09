@@ -12,7 +12,7 @@ const SignOut = () => {
         event.preventDefault()
 
         const name = event.target.name.value
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
+        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -39,7 +39,7 @@ const SignOut = () => {
         }
 
         const id = event.target.id
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/visitors/' + id
             , {
                 method: "PUT",
                 body: JSON.stringify(requestBody),

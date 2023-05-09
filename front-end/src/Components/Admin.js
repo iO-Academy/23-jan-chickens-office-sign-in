@@ -6,7 +6,7 @@ const Admin = (props) => {
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/adminlogout', {
+        fetch('https://corsapi.2023-williamt.dev.io-academy.uk/adminlogout', {
             method: "GET",
             credentials: 'include',
             headers: {
@@ -16,7 +16,7 @@ const Admin = (props) => {
         ).then((response) => {
             response.status == 200 ?
                 navigate("/") :
-                navigate("/admin/today/bulk-sign-out-failure")
+                navigate("/admin-logout/failure")
         })
     }
 
