@@ -57,7 +57,7 @@ const AdminToday = () => {
             }).then((response) => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
-                    navigate("/sign-out/success")
+                    navigate("/admin/today/sign-out-success")
             })
     }
 

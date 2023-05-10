@@ -31,12 +31,13 @@ function App() {
         <Route path="/admin/today" element={<AdminToday />} />
         <Route path="/admin/today/bulk-sign-out-success" element={ <BulkSignoutSuccess />} />
         <Route path="/admin/today/bulk-sign-out-failure" element={<AdminError />} />
+        <Route path="/admin/today/sign-out-success" element={<SignOutSuccess title="Admin visitor sign-out" message="Visitor has been successfully signed out"/>} />
         <Route path="/admin/history" element={ <AdminHistory />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
         <Route path="/sign-out/" element={<SignOut />} />
-        <Route path="/sign-out/success" element={<SignOutSuccess />} />
+        <Route path="/sign-out/success" element={<SignOutSuccess title="Visitor sign-out" message="You have been successfully signed out"/>} />
         <Route path="/sign-out/failure" element={<SignOutFailure />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>
