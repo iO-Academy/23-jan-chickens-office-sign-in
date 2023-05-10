@@ -5,7 +5,7 @@ const Admin = (props) => {
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/adminlogout', {
+        fetch('/adminlogout', {//ADD URL
             method: "GET",
             credentials: 'include',
             headers: {

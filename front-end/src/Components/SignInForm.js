@@ -20,7 +20,7 @@ const SignInForm = () => {
             signInDate: date,
             signInTime: time
         }
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors', {
+        fetch('/visitors', {//ADD URL
             method: "POST",
             body: JSON.stringify(requestBody),
             headers: {

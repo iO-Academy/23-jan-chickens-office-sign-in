@@ -6,7 +6,7 @@ const AdminLogin = (props) => {
     const navigate = useNavigate()
 
     const attemptLogin = (value) => {
-        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/verify", {
+        fetch("/verify", {//ADD URL
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },

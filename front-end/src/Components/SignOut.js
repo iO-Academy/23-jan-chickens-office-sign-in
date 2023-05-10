@@ -14,7 +14,7 @@ const SignOut = () => {
         const name = event.target.name.value
         setIsLoading(true)
 
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + name, {
+        fetch('/visitors/' + name, {//ADD URL
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -53,7 +53,7 @@ const SignOut = () => {
         }
 
         const id = event.target.id
-        fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
+        fetch('/visitors/' + id //ADD URL
             , {
                 method: "PUT",
                 body: JSON.stringify(requestBody),

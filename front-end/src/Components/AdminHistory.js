@@ -6,7 +6,7 @@ const AdminHistory = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=false", {
+        fetch("/visitors?signedIn=false", {//ADD URL
             method: "GET",
             credentials: 'include',
         })
