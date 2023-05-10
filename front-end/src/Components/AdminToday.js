@@ -4,8 +4,10 @@ import { useState, useEffect } from 'react'
 const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(false)
 
-    const handleBulkSignout = () => {//event
+
+    const handleBulkSignout = () => {
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
         const bulkSignOutDate = today.toISOString().substring(0, 10)
@@ -33,24 +35,7 @@ const AdminToday = () => {
         })
     }
 
-    // const handleSignoutClick = (event) => {
-    //     const id = event.target.id
-    //     fetch('https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors/' + id
-    //         , {
-    //             method: "PUT",
-    //             credentials: 'include',
-    //             headers: {
-    //                 "Content-Type": "application/json"
-    //             }
-    //         }).then((response) => {
-    //             response.status !== 200 ?
-    //                 navigate("/sign-out/failure") :
-    //                 navigate("/admin")
-    //         })
-
-    // }
-
-    const handleSignoutClick = (event) => {//sign out one visitor FROM SignOut.js
+    const handleSignoutClick = (event) => {
         const id = event.target.id
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
@@ -77,6 +62,8 @@ const AdminToday = () => {
     }
 
     useEffect(() => {
+        setIsLoading(true)
+
         fetch("https://visitorappapi.2023-williamt.dev.io-academy.uk/visitors?signedIn=true", {
             method: "GET",
             credentials: 'include',
@@ -89,6 +76,7 @@ const AdminToday = () => {
                 }
             })
             .then((data) => {
+                setIsLoading(false)
                 setVisitors(data.data)
             })
     }, [])
@@ -104,15 +92,17 @@ const AdminToday = () => {
                 <p></p>
             </div>
             <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
-                {visitors?.map((visitor, index) => {
-                    return (
-                        <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                            <p className="w-full px-2 py-1 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                            <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign out" onClick={handleSignoutClick} />
-                        </div>)
-                }) ?? <p className="text-center pt-10">Loading...</p>
+                {isLoading ? (<p className="text-center pt-10">Loading...</p>) : (
+                    visitors?.length ? ((visitors?.map((visitor, index) => {
+                        return (
+                            <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
+                                <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
+                                <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
+                                <p className="w-full px-2 py-1 rounded-b-lg">Time in: {visitor.signInTime}</p>
+                                <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign out" onClick={handleSignoutClick} />
+                            </div>)
+                    }))) : (<p className="text-center pt-10">No visitors present.</p>)
+                )
                 }
             </div>
         </>
