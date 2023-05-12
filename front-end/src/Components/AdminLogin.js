@@ -1,25 +1,18 @@
 import { Link, useNavigate } from 'react-router-dom'
 import iOLogo from '../io-logo.jpg'
 import PinInput from 'react-pin-input'
-import { useCookies } from 'react-cookie'
-
 
 const AdminLogin = (props) => {
-    const [cookies, setCookie, ] = useCookies()
     const navigate = useNavigate()
 
     const attemptLogin = (value) => {
-
-        fetch("http://localhost:3001/verify", {
+        fetch("/verify", {//ADD URL
             method: "POST",
             credentials: 'include',
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ passcode: value }),
         })
             .then((response) => {
-                if (cookies) {
-                    setCookie(cookies)
-                }
                 if (response.status === 200) {
                     navigate("/admin")
                 } else if (response.status === 401) {
@@ -28,10 +21,7 @@ const AdminLogin = (props) => {
                     navigate("/admin-login/failure")
                 }
             })
-
     }
-
-
 
     return (
         <>

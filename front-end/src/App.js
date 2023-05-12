@@ -9,18 +9,16 @@ import AdminLoginFailure from './Components/AdminLoginFailure'
 import NoMatch from './Components/NoMatch'
 import AdminToday from './Components/AdminToday'
 import BulkSignoutSuccess from './Components/BulkSignoutSuccess'
-import BulkSignoutFailure from './Components/BulkSignoutFailure'
+import AdminError from './Components/AdminError'
 import AdminHistory from './Components/AdminHistory'
 import AdminLoginIncorrect from './Components/AdminLoginIncorrect'
 import SignOutSuccess from './Components/SignOutSuccess'
 import SignOutFailure from './Components/SignOutFailure'
 
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom'
-import { useCookies } from 'react-cookie'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 
 function App() {
 
-const [cookies, , ] = useCookies()
   return (
     <BrowserRouter>
       <Routes>
@@ -28,16 +26,18 @@ const [cookies, , ] = useCookies()
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-login/failure" element={<AdminLoginFailure />} />
         <Route path="/admin-login/incorrect" element={<AdminLoginIncorrect />} />
-        <Route path="/admin" element={cookies.authorized ? <Admin /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today" element={cookies.authorized ? <AdminToday /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today/bulk-sign-out-success" element={cookies.authorized ? <BulkSignoutSuccess /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/today/bulk-sign-out-failure" element={cookies.authorized ? <BulkSignoutFailure /> : <Navigate to="/admin-login" />} />
-        <Route path="/admin/history" element={cookies.authorized ? <AdminHistory /> : <Navigate to="/admin-login" />} />
+        <Route path="/admin-logout/failure" element={<AdminError />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/today" element={<AdminToday />} />
+        <Route path="/admin/today/bulk-sign-out-success" element={ <BulkSignoutSuccess />} />
+        <Route path="/admin/today/bulk-sign-out-failure" element={<AdminError />} />
+        <Route path="/admin/today/sign-out-success" element={<SignOutSuccess title="Admin visitor sign-out" message="Visitor has been successfully signed out"/>} />
+        <Route path="/admin/history" element={ <AdminHistory />} />
         <Route path="/sign-in/" element={<SignIn />} />
         <Route path="/sign-in/success" element={<SignInSuccess />} />
         <Route path="/sign-in/failure" element={<SignInFailure />} />
         <Route path="/sign-out/" element={<SignOut />} />
-        <Route path="/sign-out/success" element={<SignOutSuccess />} />
+        <Route path="/sign-out/success" element={<SignOutSuccess title="Visitor sign-out" message="You have been successfully signed out"/>} />
         <Route path="/sign-out/failure" element={<SignOutFailure />} />
         <Route path="*" element={<NoMatch />} />
       </Routes>

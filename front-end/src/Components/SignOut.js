@@ -3,36 +3,60 @@ import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 const SignOut = () => {
-
     const navigate = useNavigate()
     const [, setName] = useState(null)
     const [visitorsByName, setVisitorsByName] = useState(null)
-    
+    const [invalidName, setInvalidName] = useState(null)
+    const [isLoading, setIsLoading] = useState(false)
+
     const handleNameSearch = (event) => {
         event.preventDefault()
-
         const name = event.target.name.value
-        fetch('http://localhost:3001/visitors/' + name, {
+        setIsLoading(true)
+
+        fetch('/visitors/' + name, {//ADD URL
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
             }
         }
-        ).then(response => response.json())
+        ).then((response) => {
+            if (response.ok) {
+                //setInvalidName(false)
+                return response.json()
+            } else if (response.status == 404) {
+                setInvalidName(true)
+                return response.json()
+            }
+        })
             .then(data => {
+                setIsLoading(false)
                 setVisitorsByName(data.data)
             })
     }
 
     const handleNameChange = (event) => {
+        setVisitorsByName(null)
+        setInvalidName(null)
         setName(event.target.value)
+
     }
 
     const handleSignoutClick = (event) => {
+        const today = new Date()
+        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
+        const visitorSignOutDate = today.toISOString().substring(0, 10)
+        const visitorSignOutTime = today.toISOString().substring(11, 16)
+        const requestBody = {
+            signOutDate: visitorSignOutDate,
+            signOutTime: visitorSignOutTime
+        }
+
         const id = event.target.id
-        fetch('http://localhost:3001/visitors/' + id
+        fetch('/visitors/' + id //ADD URL
             , {
                 method: "PUT",
+                body: JSON.stringify(requestBody),
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -41,7 +65,6 @@ const SignOut = () => {
                     navigate("/sign-out/failure") :
                     navigate("/sign-out/success")
             })
-
     }
 
     return (
@@ -62,23 +85,25 @@ const SignOut = () => {
                 </form>
             </div>
             <div className="flex flex-row flex-wrap justify-center items-center gap-3 mx-auto">
-                {visitorsByName?.map((visitor, index) => {
-                    return (
-                        <div key={index}>
-                            <div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                                <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
-                                <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                                <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                                <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign me out" onClick={handleSignoutClick} />
-                            </div>
-                        </div>
-                    )
-                })
-                }
+                {isLoading ? (<p className="text-center pt-10">Loading...</p>) :
+                    (invalidName || visitorsByName) && (invalidName ? (
+                        <p className="text-center pt-10">Name not found. Please try again or contact admin.</p>) : (
+                        (visitorsByName?.map((visitor, index) => {
+                            return (
+                                <div key={index}>
+                                    <div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
+                                        <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
+                                        <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
+                                        <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
+                                        <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign me out" onClick={handleSignoutClick} />
+                                    </div>
+                                </div>
+                            )
+                        }))
+                    ))}
             </div>
         </>
     )
 }
-
 
 export default SignOut

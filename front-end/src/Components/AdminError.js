@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router-dom"
 
-const BulkSignoutFailure = () => {
-
+const AdminError = () => {
     const navigate = useNavigate()
+    
     const handleButtonClick = () => {
         navigate("/")
     }
@@ -20,4 +20,4 @@ const BulkSignoutFailure = () => {
     )
 }
 
-export default BulkSignoutFailure
+export default AdminError

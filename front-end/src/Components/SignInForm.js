@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-const SignInForm = () => {
 
+const SignInForm = () => {
     const today = new Date()
-    today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000)
+    today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
     const defaultDate = today.toISOString().substring(0, 10)
     const defaultTime = today.toISOString().substring(11, 16)
     const navigate = useNavigate()
@@ -17,10 +17,10 @@ const SignInForm = () => {
         const requestBody = {
             name: name,
             company: company,
-            date: date,
+            signInDate: date,
             signInTime: time
         }
-        fetch('http://localhost:3001/visitors', {
+        fetch('/visitors', {//ADD URL
             method: "POST",
             body: JSON.stringify(requestBody),
             headers: {
@@ -29,11 +29,10 @@ const SignInForm = () => {
         }
         ).then((response) => {
             response.status !== 200 ?
-            navigate("/sign-in/failure"):
-            navigate("/sign-in/success") 
+                navigate("/sign-in/failure") :
+                navigate("/sign-in/success")
         })
     }
-
 
     const handleNameChange = (event) => {
         setName(event.target.value)
@@ -47,7 +46,6 @@ const SignInForm = () => {
     const handleTimeChange = (event) => {
         setTime(event.target.value)
     }
-
 
     return (
         <div className="w-full max-w-xs mx-auto">

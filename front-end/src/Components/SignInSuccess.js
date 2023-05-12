@@ -1,7 +1,9 @@
 import { useNavigate, Link } from "react-router-dom"
 import iOLogo from "../io-logo.jpg"
+
 const SignInSuccess = () => {
     const navigate = useNavigate()
+    
     const handleButtonClick = () => {
         navigate("/")
     }

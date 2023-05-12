@@ -1,17 +1,16 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
-const { v4: uuidv4 } = require('uuid')
 
 const addNewVisitor = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
         const name = request.body.name
         const signInTime = request.body.signInTime
-        const date = request.body.date
-        if (name && signInTime && date && name.length < 100) {
+        const signInDate = request.body.signInDate
+        if (name && signInTime && signInDate && name.length < 100) {
             const newVisitor = {
                 name: name,
-                date: date,
+                signInDate: signInDate,
                 signInTime: signInTime,
                 signedIn: true
             }
@@ -40,16 +39,8 @@ const addNewVisitor = async (request, response) => {
 const getAdminAuthorization = async (request, response) => {
     const loginInput = request.body.passcode
     if (loginInput === '1234') {
-
-        const sessionId = uuidv4()
-        await store.set(sessionId, { admin: true })
-
-        request.session['adminSessionId'] = sessionId
-        response.setHeader('access-control-expose-headers', 'Set-Cookie');
-        response.cookie('authorized', sessionId, {
-            maxAge: 900000,
-            secure: false
-        })
+        response.setHeader('access-control-expose-headers', 'Set-Cookie')
+        request.session.authorised = true
         response.status(200).json(
             {
                 message: 'Authorization successful',
@@ -68,7 +59,6 @@ const getVisitorsBySignIn = async (request, response) => {
     try {
         if (request.query.signedIn === "true" || request.query.signedIn === "false") {
             const signedInBool = request.query.signedIn === "true" ? true : false
-            const today = new Date().toISOString().substring(0, 10)
             const collection = await getCollection("OfficeSignIn", "Visitors")
             if (Object.keys(request.query).length == 1) {
                 let data = await collection.find({ signedIn: signedInBool }).toArray()
@@ -94,12 +84,12 @@ const getVisitorsBySignIn = async (request, response) => {
 const signOutAllVisitors = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
+        bulkSignOutDate = request.body.signOutDate
+        bulkSignOutTime = request.body.signOutTime
         await collection.updateMany(
             { signedIn: true },
             {
-                $currentDate: {
-                    signOutTime: true
-                }, $set: { signedIn: false }
+                $set: { signedIn: false, signOutDate: bulkSignOutDate, signOutTime: bulkSignOutTime }
             }
         )
         return response.status(200).json({
@@ -114,21 +104,19 @@ const signOutAllVisitors = async (request, response) => {
     }
 }
 
-
 const signOutOneVisitorById = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        const today = new Date()
-        today.setTime( today.getTime() - new Date().getTimezoneOffset()*60*1000)
-        const signOutTime = today.toISOString().substring(11, 16)
-        console.log(signOutTime)
+        visitorSignOutDate = request.body.signOutDate
+        visitorSignOutTime = request.body.signOutTime
         const visitorId = request.params.id
         await collection.updateOne(
             { _id: new ObjectId(visitorId) },
             {
                 $set: {
                     signedIn: false,
-                    signOutTime: signOutTime
+                    signOutDate: visitorSignOutDate,
+                    signOutTime: visitorSignOutTime,
 
                 }
             }
@@ -170,4 +158,25 @@ const getVisitorsByName = async (request, response) => {
 
 }
 
-module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName }
+const destroyAdminAuthorization = async (request, response) => {
+    request.session.destroy()
+    store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
+    response.status(200).send()
+}
+
+const optionControl = async (request, response) => {
+    response.status(200).send()
+}
+
+const clearSessionStore = async (request, response) => {
+    store.clear((error) => {
+        console.log("Session store cleared")
+    })
+    store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
+    return response.status(200).json({
+        message: 'Session store cleared.',
+        data: []
+    })
+}
+
+module.exports = { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName, destroyAdminAuthorization, optionControl, clearSessionStore }

@@ -1,14 +1,22 @@
 import { useNavigate, Link } from "react-router-dom";
 import iOLogo from '../io-logo.jpg'
-import { useCookies } from 'react-cookie'
 
 const Admin = (props) => {
     const navigate = useNavigate()
-    const [cookies, setCookie, removeCookie] = useCookies()
 
     const handleLogout = () => {
-        removeCookie('authorized', { path: '/' });
-        navigate("/")
+        fetch('/adminlogout', {//ADD URL
+            method: "GET",
+            credentials: 'include',
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        ).then((response) => {
+            response.status == 200 ?
+                navigate("/") :
+                navigate("/admin-logout/failure")
+        })
     }
 
     return (
