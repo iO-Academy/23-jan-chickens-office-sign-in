@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { baseURL } from "../config"
 
 const SignInForm = () => {
     const today = new Date()
@@ -20,7 +21,7 @@ const SignInForm = () => {
             signInDate: date,
             signInTime: time
         }
-        fetch('/visitors', {//ADD URL
+        fetch(baseURL + '/visitors', {
             method: "POST",
             body: JSON.stringify(requestBody),
             headers: {

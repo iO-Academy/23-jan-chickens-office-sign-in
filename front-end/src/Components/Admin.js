@@ -1,11 +1,13 @@
 import { useNavigate, Link } from "react-router-dom";
 import iOLogo from '../io-logo.jpg'
+import { baseURL } from "../config";
+
 
 const Admin = (props) => {
     const navigate = useNavigate()
 
     const handleLogout = () => {
-        fetch('/adminlogout', {//ADD URL
+        fetch(baseURL + '/adminlogout', {
             method: "GET",
             credentials: 'include',
             headers: {

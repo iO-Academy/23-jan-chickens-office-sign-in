@@ -1,12 +1,13 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { baseURL } from '../config'
 
 const AdminHistory = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
 
     useEffect(() => {
-        fetch("/visitors?signedIn=false", {//ADD URL
+        fetch(baseURL + "/visitors?signedIn=false", {
             method: "GET",
             credentials: 'include',
         })

@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
+import { baseURL } from '../config'
 
 const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
@@ -17,7 +18,7 @@ const AdminToday = () => {
             signOutTime: bulkSignOutTime
         }
 
-        fetch('/visitors', {//ADD URL
+        fetch(baseURL + '/visitors', {
             method: 'PUT',
             credentials: 'include',
             body: JSON.stringify(requestBody),
@@ -46,7 +47,7 @@ const AdminToday = () => {
             signOutTime: visitorSignOutTime
         }
 
-        fetch('/admin/' + id //ADD URL
+        fetch(baseURL + '/admin/' + id
             , {
                 method: "PUT",
                 credentials: 'include',
@@ -64,11 +65,14 @@ const AdminToday = () => {
     useEffect(() => {
         setIsLoading(true)
 
-        fetch("/visitors?signedIn=true", {// ADD URL
+        fetch(baseURL + "/visitors?signedIn=true", {
             method: "GET",
             credentials: 'include',
         })
             .then((response) => {
+                
+                setIsLoading(false)
+
                 if (response.status == 200) {
                     return response.json()
                 } else {

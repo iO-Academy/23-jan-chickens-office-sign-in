@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { baseURL } from '../config'
 
 const SignOut = () => {
     const navigate = useNavigate()
@@ -14,7 +15,7 @@ const SignOut = () => {
         const name = event.target.name.value
         setIsLoading(true)
 
-        fetch('/visitors/' + name, {//ADD URL
+        fetch(baseURL + '/visitors/' + name, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
@@ -22,7 +23,6 @@ const SignOut = () => {
         }
         ).then((response) => {
             if (response.ok) {
-                //setInvalidName(false)
                 return response.json()
             } else if (response.status == 404) {
                 setInvalidName(true)
@@ -53,7 +53,7 @@ const SignOut = () => {
         }
 
         const id = event.target.id
-        fetch('/visitors/' + id //ADD URL
+        fetch(baseURL + '/visitors/' + id
             , {
                 method: "PUT",
                 body: JSON.stringify(requestBody),

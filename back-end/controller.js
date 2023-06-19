@@ -1,10 +1,22 @@
 const { getCollection, store } = require('./service/DatabaseService')
 const { ObjectId } = require('mongodb')
+const crypto = require('crypto')
+
+// const { profanity } = require('@2toad/profanity').profanity
+var profanity = require('@2toad/profanity').profanity;
+
+
 
 const addNewVisitor = async (request, response) => {
     try {
         const collection = await getCollection("OfficeSignIn", "Visitors")
-        const name = request.body.name
+        const name = profanity.censor(request.body.name)
+
+        // if (profanity.exists(name)) {
+        //     name = profanity.censor(name)
+        // }
+        //profanity.censor(name)
+
         const signInTime = request.body.signInTime
         const signInDate = request.body.signInDate
         if (name && signInTime && signInDate && name.length < 100) {
@@ -15,7 +27,8 @@ const addNewVisitor = async (request, response) => {
                 signedIn: true
             }
             if (request.body.company) {
-                newVisitor['company'] = request.body.company
+                newVisitor['company'] = profanity.censor(request.body.company)
+                // newVisitor['company'] = request.body.company
             }
             await collection.insertOne(newVisitor)
             return response.status(200).json({
@@ -37,23 +50,55 @@ const addNewVisitor = async (request, response) => {
 }
 
 const getAdminAuthorization = async (request, response) => {
-    const loginInput = request.body.passcode
-    if (loginInput === '1234') {
-        response.setHeader('access-control-expose-headers', 'Set-Cookie')
-        request.session.authorised = true
-        response.status(200).json(
-            {
-                message: 'Authorization successful',
-                data: []
-            })
-    } else {
-        response.status(401).json(
-            {
-                message: 'Authorization failed',
-                data: []
-            })
+    try {
+        const collection = await getCollection("OfficeSignIn", "Admin")
+        const loginInput = request.body.passcode
+        const data = await collection.findOne({ hash: { $exists: true } })
+        const loginHash = crypto.pbkdf2Sync(loginInput, data.salt,
+            1000, 64, `sha512`).toString(`hex`);
+        console.log("data.hash: " + data.hash)
+        console.log("loginHash: " + loginHash)
+        if (loginHash == data.hash) {
+            response.setHeader('access-control-expose-headers', 'Set-Cookie')
+            request.session.authorised = true
+            response.status(200).json(
+                {
+                    message: 'Authorization successful',
+                    data: []
+                })
+        } else {
+            response.status(401).json(
+                {
+                    message: 'Authorization failed',
+                    data: []
+                })
+        }
+    } catch (error) {
+        return response.status(500).json({
+            message: "Unexpected error",
+            data: []
+        })
     }
 }
+
+// const getAdminAuthorization = async (request, response) => {
+//     const loginInput = request.body.passcode
+//     if (loginInput === '1234') {
+//         response.setHeader('access-control-expose-headers', 'Set-Cookie')
+//         request.session.authorised = true
+//         response.status(200).json(
+//             {
+//                 message: 'Authorization successful',
+//                 data: []
+//             })
+//     } else {
+//         response.status(401).json(
+//             {
+//                 message: 'Authorization failed',
+//                 data: []
+//             })
+//     }
+// }
 
 const getVisitorsBySignIn = async (request, response) => {
     try {
