@@ -2,18 +2,21 @@ import { Link } from 'react-router-dom'
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { baseURL } from '../config'
+import LoadingLogo from './LoadingLogo'
+import Nav from './Nav.js'
 
 const SignOut = () => {
     const navigate = useNavigate()
     const [, setName] = useState(null)
     const [visitorsByName, setVisitorsByName] = useState(null)
     const [invalidName, setInvalidName] = useState(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [nameSearchIsLoading, setNameSearchIsLoading] = useState(false)
+    const [signOutClickIsLoading, setSignOutClickIsLoading] = useState(false)
 
     const handleNameSearch = (event) => {
         event.preventDefault()
         const name = event.target.name.value
-        setIsLoading(true)
+        setNameSearchIsLoading(true)
 
         fetch(baseURL + '/visitors/' + name, {
             method: "GET",
@@ -30,7 +33,7 @@ const SignOut = () => {
             }
         })
             .then(data => {
-                setIsLoading(false)
+                setNameSearchIsLoading(false)
                 setVisitorsByName(data.data)
             })
     }
@@ -51,8 +54,9 @@ const SignOut = () => {
             signOutDate: visitorSignOutDate,
             signOutTime: visitorSignOutTime
         }
-
         const id = event.target.id
+        setSignOutClickIsLoading(true)
+
         fetch(baseURL + '/visitors/' + id
             , {
                 method: "PUT",
@@ -61,17 +65,40 @@ const SignOut = () => {
                     "Content-Type": "application/json"
                 }
             }).then((response) => {
+                setSignOutClickIsLoading(false)
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
                     navigate("/sign-out/success")
             })
     }
 
+    // return (
+    //     <>
+    //         <nav className="bg-amber-300 p-4">
+    //             <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
+    //         </nav>
+
+    //     </>
+    if (signOutClickIsLoading) {
+        return (
+            <>
+                {/* <nav className="bg-amber-300 p-4">
+                    <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
+                </nav> */}
+            {/* <Nav links={[{name: "Home", path: "/"}]}/> */}
+            <Nav links={["Home"]}/>
+                <LoadingLogo message="Signing out..."/>
+            </>
+        )
+    }
+
     return (
         <>
-            <nav className="bg-amber-300 p-4">
+
+            {/* <nav className="bg-amber-300 p-4">
                 <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
-            </nav>
+            </nav> */}
+            <Nav links={[{name: "Home", path: "/"}]}/>
             <h1 className="p-5 text-3xl text-center">Visitor sign out</h1>
             <div className="w-full max-w-xs mx-auto">
                 <form className="bg-amber-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleNameSearch}>
@@ -85,7 +112,7 @@ const SignOut = () => {
                 </form>
             </div>
             <div className="flex flex-row flex-wrap justify-center items-center gap-3 mx-auto">
-                {isLoading ? (<p className="text-center pt-10">Loading...</p>) :
+                {nameSearchIsLoading ? (<p className="text-center pt-10">Loading...</p>) :
                     (invalidName || visitorsByName) && (invalidName ? (
                         <p className="text-center pt-10">Name not found. Please try again or contact admin.</p>) : (
                         (visitorsByName?.map((visitor, index) => {
@@ -103,6 +130,7 @@ const SignOut = () => {
                     ))}
             </div>
         </>
+
     )
 }
 

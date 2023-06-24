@@ -1,12 +1,14 @@
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { baseURL } from '../config'
+import Nav from './Nav.js'
+// import * as Admin from './Admin.js'
+import { handleLogout } from './Admin.js'
 
 const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
-
 
     const handleBulkSignout = () => {
         const today = new Date()
@@ -64,15 +66,12 @@ const AdminToday = () => {
 
     useEffect(() => {
         setIsLoading(true)
-
         fetch(baseURL + "/visitors?signedIn=true", {
             method: "GET",
             credentials: 'include',
         })
             .then((response) => {
-                
                 setIsLoading(false)
-
                 if (response.status == 200) {
                     return response.json()
                 } else {
@@ -85,12 +84,30 @@ const AdminToday = () => {
             })
     }, [])
 
+    // let links = [{name: "Back", path: "/admin"}]
+    // if (visitors?.length) {
+    //     links.push({name: "Bulk Sign Out", handler: handleBulkSignout})
+    // } else if (visitors?.length === 0) {
+    //     // links.push({name: "History", path: "/admin/history"})
+    //     links.push({name: "Logout", handler: handleLogout})
+    // }
+
+    let links = ["Back"]
+    if (visitors?.length) {
+        links.push("BulkSignOut")
+    } else if (visitors?.length === 0) {
+        // links.push({name: "History", path: "/admin/history"})
+        links.push("Logout")
+    }
+
     return (
         <>
-            <nav className="bg-amber-300 p-4 flex justify-between">
+            {/* <nav className="bg-amber-300 p-4 flex justify-between">
                 <Link className="mr-2 ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/admin">Back</Link>
                 <button className="mr-2 ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleBulkSignout}>Bulk Sign Out</button>
-            </nav>
+            </nav> */}
+            {/* <Nav links={[{name: "Back", path: "/admin"}, {name: "Bulk Sign Out", handler: handleBulkSignout}]}/> */}
+            <Nav links={links}/>
             <div className="flex flex-col gap-4 items-center justify-center pt-10">
                 <h1 className="text-4xl p-1 text-center">Today's Visitors</h1>
                 <p></p>
