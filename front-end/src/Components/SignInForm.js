@@ -1,20 +1,24 @@
-import { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react"
+import { useNavigate, useOutletContext } from "react-router-dom"
 import { baseURL } from "../config"
-import LoadingLogo from './LoadingLogo'
-
+import LoadingSpinner from "./LoadingSpinner"
+import IOLogoContainer from "./IOLogoContainer"
 
 const SignInForm = () => {
     const today = new Date()
     today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-    const defaultDate = today.toISOString().substring(0, 10)
+    const defaultHTMLDate = today.toISOString().substring(0, 10)
+    const defaultBodyDate = today.toLocaleDateString("en-GB")
     const defaultTime = today.toISOString().substring(11, 16)
     const navigate = useNavigate()
     const [name, setName] = useState(null)
     const [company, setCompany] = useState(null)
     const [time, setTime] = useState(defaultTime)
-    const [date, setDate] = useState(defaultDate)
+    // const [date, setDate] = useState(defaultDate)
+    const [date, setDate] = useState(defaultBodyDate)
     const [isLoading, setIsLoading] = useState(false)
+    const [, setLinks] = useOutletContext();
+    useEffect(() => setLinks(["Home"]), [])
 
     const handleSignIn = (event) => {
         event.preventDefault()
@@ -37,6 +41,9 @@ const SignInForm = () => {
             response.status !== 200 ?
                 navigate("/sign-in/failure") :
                 navigate("/sign-in/success")
+        }).catch((e) => {
+            console.error(e.message)
+            navigate("/sign-in/failure")
         })
     }
 
@@ -47,7 +54,9 @@ const SignInForm = () => {
         setCompany(event.target.value)
     }
     const handleDateChange = (event) => {
-        setDate(event.target.value)
+        let userInputDate = new Date(event.target.value + 'T00:00');
+        let localDate = userInputDate.toLocaleDateString("en-GB")
+        setDate(localDate)
     }
     const handleTimeChange = (event) => {
         setTime(event.target.value)
@@ -55,22 +64,9 @@ const SignInForm = () => {
 
     if (isLoading) {
         return (
-            <LoadingLogo message="Signing in..." />
-            // <div className="w-full max-w-xs mx-auto">
-            //     <div className="flex flex-col gap-4 items-center justify-center pt-10">
-            //         <img className="max-w-sm pt-10" src={iOLogo} alt="iO academy logo" onLoad={handleImgLoad} />
-            //         {imgLoaded &&
-            //             <>
-            //             <div className="flex flex-col gap-4 items-center mt-4 animate-pulse">
-            //                     <div className="h-6 w-48 bg-gray-100 rounded-full"></div>
-            //                     <div className="h-4 w-56 bg-gray-100 rounded-full"></div>
-            //                     <div className="h-4 w-56 bg-gray-100 rounded-full"></div>
-            //                     <div className="h-4 w-44 bg-gray-100 rounded-full"></div>
-            //                     <div className="h-7 w-28 bg-gray-100 rounded-full mt-2"></div>
-            //                 </div>
-            //             </>}
-            //     </div>
-            // </div >
+            <IOLogoContainer>
+                <LoadingSpinner message="Signing in..." />
+            </IOLogoContainer>
         )
     }
     return (
@@ -88,7 +84,7 @@ const SignInForm = () => {
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="date">Date*</label>
-                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="date" id="date" name="date" onChange={handleDateChange} defaultValue={defaultDate} required />
+                        <input className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" type="date" id="date" name="date" onChange={handleDateChange} defaultValue={defaultHTMLDate} required />
                     </div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="time">Time*</label>

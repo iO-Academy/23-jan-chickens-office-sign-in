@@ -1,9 +1,9 @@
-import { Link } from 'react-router-dom'
-import { useState } from "react"
+import { useOutletContext } from 'react-router-dom'
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { baseURL } from '../config'
-import LoadingLogo from './LoadingLogo'
-import Nav from './Nav.js'
+import IOLogoContainer from "./IOLogoContainer"
+import LoadingSpinner from './LoadingSpinner'
 
 const SignOut = () => {
     const navigate = useNavigate()
@@ -12,6 +12,8 @@ const SignOut = () => {
     const [invalidName, setInvalidName] = useState(null)
     const [nameSearchIsLoading, setNameSearchIsLoading] = useState(false)
     const [signOutClickIsLoading, setSignOutClickIsLoading] = useState(false)
+    const [, setLinks] = useOutletContext();
+    useEffect(() => setLinks(["Home"]), [])
 
     const handleNameSearch = (event) => {
         event.preventDefault()
@@ -27,14 +29,20 @@ const SignOut = () => {
         ).then((response) => {
             if (response.ok) {
                 return response.json()
-            } else if (response.status == 404) {
+            } else if (response.status === 404) {
                 setInvalidName(true)
                 return response.json()
+            } else {
+                navigate("/sign-out/failure")
             }
         })
             .then(data => {
                 setNameSearchIsLoading(false)
-                setVisitorsByName(data.data)
+                setVisitorsByName(data?.data)
+            })
+            .catch((e) => {
+                console.error(e.message)
+                navigate("/sign-out/failure")
             })
     }
 
@@ -42,13 +50,12 @@ const SignOut = () => {
         setVisitorsByName(null)
         setInvalidName(null)
         setName(event.target.value)
-
     }
 
     const handleSignoutClick = (event) => {
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-        const visitorSignOutDate = today.toISOString().substring(0, 10)
+        const visitorSignOutDate = today.toLocaleDateString("en-GB")
         const visitorSignOutTime = today.toISOString().substring(11, 16)
         const requestBody = {
             signOutDate: visitorSignOutDate,
@@ -69,36 +76,22 @@ const SignOut = () => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
                     navigate("/sign-out/success")
+            }).catch((e) => {
+                console.error(e.message)
+                navigate("/sign-out/failure")
             })
     }
 
-    // return (
-    //     <>
-    //         <nav className="bg-amber-300 p-4">
-    //             <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
-    //         </nav>
-
-    //     </>
     if (signOutClickIsLoading) {
         return (
-            <>
-                {/* <nav className="bg-amber-300 p-4">
-                    <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
-                </nav> */}
-            {/* <Nav links={[{name: "Home", path: "/"}]}/> */}
-            <Nav links={["Home"]}/>
-                <LoadingLogo message="Signing out..."/>
-            </>
+            <IOLogoContainer >
+                <LoadingSpinner message="Signing out..." />
+            </IOLogoContainer>
         )
     }
 
     return (
         <>
-
-            {/* <nav className="bg-amber-300 p-4">
-                <Link className="ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/">Home</Link>
-            </nav> */}
-            <Nav links={[{name: "Home", path: "/"}]}/>
             <h1 className="p-5 text-3xl text-center">Visitor sign out</h1>
             <div className="w-full max-w-xs mx-auto">
                 <form className="bg-amber-300 shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleNameSearch}>
@@ -112,7 +105,7 @@ const SignOut = () => {
                 </form>
             </div>
             <div className="flex flex-row flex-wrap justify-center items-center gap-3 mx-auto">
-                {nameSearchIsLoading ? (<p className="text-center pt-10">Loading...</p>) :
+                {nameSearchIsLoading ? (<><LoadingSpinner color="blue-500" /></>) :
                     (invalidName || visitorsByName) && (invalidName ? (
                         <p className="text-center pt-10">Name not found. Please try again or contact admin.</p>) : (
                         (visitorsByName?.map((visitor, index) => {

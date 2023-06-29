@@ -1,48 +1,29 @@
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useOutletContext } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { baseURL } from '../config'
-import Nav from './Nav.js'
-// import * as Admin from './Admin.js'
-import { handleLogout } from './Admin.js'
+import LoadingSpinner from './LoadingSpinner'
 
 const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
+    const [, setLinks] = useOutletContext()
 
-    const handleBulkSignout = () => {
-        const today = new Date()
-        today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-        const bulkSignOutDate = today.toISOString().substring(0, 10)
-        const bulkSignOutTime = today.toISOString().substring(11, 16)
-        const requestBody = {
-            signOutDate: bulkSignOutDate,
-            signOutTime: bulkSignOutTime
+    useEffect(() => {
+        setLinks(["Back"])
+        if (visitors?.length) {
+            setLinks(["Back", "Bulk Sign Out"])
+        } else if (visitors?.length === 0) {
+            setLinks(["Back", "Logout"])
         }
-
-        fetch(baseURL + '/visitors', {
-            method: 'PUT',
-            credentials: 'include',
-            body: JSON.stringify(requestBody),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        }).then((response) => {
-            if (response.status == 200) {
-                navigate("/admin/today/bulk-sign-out-success")
-            } else if (response.status == 401) {
-                navigate("/admin-login")
-            } else {
-                navigate("/admin/today/bulk-sign-out-failure")
-            }
-        })
     }
+        , [visitors])
 
     const handleSignoutClick = (event) => {
         const id = event.target.id
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
-        const visitorSignOutDate = today.toISOString().substring(0, 10)
+        const visitorSignOutDate = today.toLocaleDateString("en-GB")
         const visitorSignOutTime = today.toISOString().substring(11, 16)
         const requestBody = {
             signOutDate: visitorSignOutDate,
@@ -61,6 +42,9 @@ const AdminToday = () => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
                     navigate("/admin/today/sign-out-success")
+            }).catch((e) => {
+                console.error(e.message)
+                navigate("/sign-out/failure")
             })
     }
 
@@ -72,48 +56,31 @@ const AdminToday = () => {
         })
             .then((response) => {
                 setIsLoading(false)
-                if (response.status == 200) {
+                if (response.status === 200) {
                     return response.json()
+                } else if (response.status === 401) {
+                    navigate("/admin/login")
                 } else {
-                    navigate("/admin-login")
+                    navigate("/admin/today/error")
                 }
             })
             .then((data) => {
                 setIsLoading(false)
-                setVisitors(data.data)
+                setVisitors(data?.data)
+            }).catch((e) => {
+                console.error(e.message)
+                navigate("/admin/today/error")
             })
     }, [])
 
-    // let links = [{name: "Back", path: "/admin"}]
-    // if (visitors?.length) {
-    //     links.push({name: "Bulk Sign Out", handler: handleBulkSignout})
-    // } else if (visitors?.length === 0) {
-    //     // links.push({name: "History", path: "/admin/history"})
-    //     links.push({name: "Logout", handler: handleLogout})
-    // }
-
-    let links = ["Back"]
-    if (visitors?.length) {
-        links.push("BulkSignOut")
-    } else if (visitors?.length === 0) {
-        // links.push({name: "History", path: "/admin/history"})
-        links.push("Logout")
-    }
-
     return (
         <>
-            {/* <nav className="bg-amber-300 p-4 flex justify-between">
-                <Link className="mr-2 ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" to="/admin">Back</Link>
-                <button className="mr-2 ease-in-out delay-150 duration-300 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow" onClick={handleBulkSignout}>Bulk Sign Out</button>
-            </nav> */}
-            {/* <Nav links={[{name: "Back", path: "/admin"}, {name: "Bulk Sign Out", handler: handleBulkSignout}]}/> */}
-            <Nav links={links}/>
             <div className="flex flex-col gap-4 items-center justify-center pt-10">
                 <h1 className="text-4xl p-1 text-center">Today's Visitors</h1>
                 <p></p>
             </div>
             <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
-                {isLoading ? (<p className="text-center pt-10">Loading...</p>) : (
+                {isLoading ? (<LoadingSpinner />) : (
                     visitors?.length ? ((visitors?.map((visitor, index) => {
                         return (
                             <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
