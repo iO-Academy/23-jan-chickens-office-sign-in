@@ -76,7 +76,8 @@ const SignOut = () => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
                     navigate("/sign-out/success")
-            }).catch((e) => {
+            })
+            .catch((e) => {
                 console.error(e.message)
                 navigate("/sign-out/failure")
             })

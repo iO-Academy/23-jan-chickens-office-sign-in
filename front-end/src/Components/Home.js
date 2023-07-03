@@ -1,10 +1,10 @@
-import { Link, useOutletContext } from "react-router-dom"
+import { useOutletContext } from "react-router-dom"
 import React, { useEffect } from "react"
 import IOLogoContainer from "./IOLogoContainer"
 import Button from "./Button"
 
 const Home = () => {
-    const [links, setLinks] = useOutletContext()
+    const [, setLinks] = useOutletContext()
     useEffect(() => setLinks(["Admin"]), [])
 
     return (

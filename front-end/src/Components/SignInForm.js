@@ -41,7 +41,8 @@ const SignInForm = () => {
             response.status !== 200 ?
                 navigate("/sign-in/failure") :
                 navigate("/sign-in/success")
-        }).catch((e) => {
+        })
+        .catch((e) => {
             console.error(e.message)
             navigate("/sign-in/failure")
         })

@@ -28,7 +28,8 @@ const AdminLogin = () => {
                 } else {
                     navigate("/admin/login/failure")
                 }
-            }).catch((e) => {
+            })
+            .catch((e) => {
                 console.error(e.message)
                 navigate("/admin/login/failure")
             })

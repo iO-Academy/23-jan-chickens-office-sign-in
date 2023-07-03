@@ -42,7 +42,8 @@ const AdminToday = () => {
                 response.status !== 200 ?
                     navigate("/sign-out/failure") :
                     navigate("/admin/today/sign-out-success")
-            }).catch((e) => {
+            })
+            .catch((e) => {
                 console.error(e.message)
                 navigate("/sign-out/failure")
             })
@@ -67,7 +68,8 @@ const AdminToday = () => {
             .then((data) => {
                 setIsLoading(false)
                 setVisitors(data?.data)
-            }).catch((e) => {
+            })
+            .catch((e) => {
                 console.error(e.message)
                 navigate("/admin/today/error")
             })

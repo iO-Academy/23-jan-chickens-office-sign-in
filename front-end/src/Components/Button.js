@@ -16,7 +16,8 @@ const Button = (props) => {
             response.status === 200 ?
                 navigate("/") :
                 navigate("/admin/logout/failure")
-        }).catch((e) => {
+        })
+        .catch((e) => {
             console.error(e.message)
             navigate("/admin/logout/failure")
         })
@@ -47,7 +48,8 @@ const Button = (props) => {
             } else {
                 navigate("/admin/today/bulk-sign-out-failure")
             }
-        }).catch((e) => {
+        })
+        .catch((e) => {
             console.error(e.message)
             navigate("/admin/today/bulk-sign-out-failure")
         })

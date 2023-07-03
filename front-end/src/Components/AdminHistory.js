@@ -25,7 +25,8 @@ const AdminHistory = () => {
             })
             .then((data) => {
                 setVisitors(data?.data.reverse())
-            }).catch((e) => {
+            })
+            .catch((e) => {
                 console.error(e.message)
                 navigate("/admin/history/error")
             })
@@ -55,5 +56,5 @@ const AdminHistory = () => {
         </>
     )
 }
-{/* <p className="text-center pt-10">Loading...</p> */ }
+
 export default AdminHistory
