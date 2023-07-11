@@ -1,9 +1,11 @@
-import { useOutletContext } from 'react-router-dom'
-import { useState, useEffect } from "react"
+import { useOutletContext, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import { baseURL } from '../config'
 import IOLogoContainer from "./IOLogoContainer"
 import LoadingSpinner from './LoadingSpinner'
+import VisitorContainer from './VisitorContainer'
+import VisitorRow from './VisitorRow'
 
 const SignOut = () => {
     const navigate = useNavigate()
@@ -12,8 +14,9 @@ const SignOut = () => {
     const [invalidName, setInvalidName] = useState(null)
     const [nameSearchIsLoading, setNameSearchIsLoading] = useState(false)
     const [signOutClickIsLoading, setSignOutClickIsLoading] = useState(false)
-    const [, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Home"]), [])
+    const [, setLinks] = useOutletContext()
+    const location = useLocation()
+    useEffect(() => setLinks(["Home"]), [setLinks])
 
     const handleNameSearch = (event) => {
         event.preventDefault()
@@ -32,8 +35,8 @@ const SignOut = () => {
             } else if (response.status === 404) {
                 setInvalidName(true)
                 return response.json()
-            } else {
-                navigate("/sign-out/failure")
+            } else if (window.location.pathname === location.pathname) {
+                navigate("failure", { state: response.status })
             }
         })
             .then(data => {
@@ -42,7 +45,7 @@ const SignOut = () => {
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/sign-out/failure")
+                window.location.pathname === location.pathname && navigate("failure")
             })
     }
 
@@ -53,6 +56,7 @@ const SignOut = () => {
     }
 
     const handleSignoutClick = (event) => {
+        setSignOutClickIsLoading(true)
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
         const visitorSignOutDate = today.toLocaleDateString("en-GB")
@@ -62,7 +66,6 @@ const SignOut = () => {
             signOutTime: visitorSignOutTime
         }
         const id = event.target.id
-        setSignOutClickIsLoading(true)
 
         fetch(baseURL + '/visitors/' + id
             , {
@@ -73,13 +76,15 @@ const SignOut = () => {
                 }
             }).then((response) => {
                 setSignOutClickIsLoading(false)
-                response.status !== 200 ?
-                    navigate("/sign-out/failure") :
+                if (response.status === 200) {
                     navigate("/sign-out/success")
+                } else if (window.location.pathname === location.pathname) {
+                    navigate("failure", { state: response.status })
+                }
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/sign-out/failure")
+                window.location.pathname === location.pathname && navigate("failure")
             })
     }
 
@@ -111,14 +116,14 @@ const SignOut = () => {
                         <p className="text-center pt-10">Name not found. Please try again or contact admin.</p>) : (
                         (visitorsByName?.map((visitor, index) => {
                             return (
-                                <div key={index}>
-                                    <div className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                                        <p className="w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
-                                        <p className="w-full px-4 py-2 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                                        <p className="w-full px-4 py-2 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                                        <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign me out" onClick={handleSignoutClick} />
-                                    </div>
-                                </div>
+                                <React.Fragment key={index}>
+                                    <VisitorContainer>
+                                        <VisitorRow prefix="Name: " text={visitor.name} />
+                                        <VisitorRow prefix="From: " text={(visitor.company ?? 'Did not say')} />
+                                        <VisitorRow prefix="Time in: " text={visitor.signInTime} />
+                                        <input id={visitor._id} className="w-full col-span-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-2 px-4 focus:outline-none focus:shadow-outline" type="submit" value="Sign me out" onClick={handleSignoutClick} />
+                                    </VisitorContainer>
+                                </React.Fragment>
                             )
                         }))
                     ))}

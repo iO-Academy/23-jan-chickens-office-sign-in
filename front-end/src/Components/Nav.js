@@ -4,6 +4,7 @@ import Button from "./Button"
 
 const Nav = () => {
     const [links, setLinks] = useState([])
+    const [replace, setReplace] = useState(null)
 
     return (
         <>
@@ -11,12 +12,12 @@ const Nav = () => {
                 {
                     links?.map((link) => {
                         return (
-                            <Button key={link} link={link} />
+                            <Button key={link} link={link} replace={replace}/>
                         )
                     })
                 }
             </nav>
-            <Outlet context={[links, setLinks]} />
+            <Outlet context={[links, setLinks, replace, setReplace]} />
         </>
     )
 }

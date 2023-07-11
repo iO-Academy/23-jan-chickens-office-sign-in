@@ -1,13 +1,16 @@
-import { useNavigate, useOutletContext } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useNavigate, useOutletContext, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import { baseURL } from '../config'
 import LoadingSpinner from './LoadingSpinner'
+import VisitorContainer from './VisitorContainer'
+import VisitorRow from './VisitorRow'
 
 const AdminHistory = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
-    const [, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Back", "Logout"]), [])
+    const [, setLinks] = useOutletContext()
+    const location = useLocation()
+    useEffect(() => setLinks(["Back", "Logout"]), [setLinks])
 
     useEffect(() => {
         fetch(baseURL + "/visitors?signedIn=false", {
@@ -19,8 +22,8 @@ const AdminHistory = () => {
                     return response.json()
                 } else if (response.status === 401) {
                     navigate("/admin/login")
-                } else {
-                    navigate("/admin/history/error")
+                } else if (window.location.pathname === location.pathname) {
+                    navigate("error", { state: response.status })
                 }
             })
             .then((data) => {
@@ -28,27 +31,29 @@ const AdminHistory = () => {
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/admin/history/error")
+                window.location.pathname === location.pathname && navigate("error")
             })
-    }, [])
+    }, [navigate, location.pathname])
 
     return (
         <>
-            <div className="flex flex-col gap-4 items-center justify-center pt-5">
+            <div className="flex flex-col gap-4 items-center justify-center pt-10 pb-7">
                 <h1 className="text-4xl p-1 text-center">Visitor History</h1>
-                <p></p>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
+            <div className="flex flex-wrap justify-center items-start gap-2 mx-auto mb-2">
                 {visitors?.map((visitor, index) => {
                     return (
-                        <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date in: {visitor.signInDate}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Time in: {visitor.signInTime}</p>
-                            <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >Date out: {visitor.signOutDate}</p>
-                            <p className="w-full px-2 py-1" >Time out: {visitor.signOutTime}</p>
-                        </div>)
+                        <React.Fragment key={index}>
+                            <VisitorContainer >
+                                <VisitorRow prefix="Name: " text={visitor.name} />
+                                <VisitorRow prefix="From: " text={(visitor.company ?? 'Did not say')} />
+                                <VisitorRow prefix="Date in: " text={visitor.signInDate} />
+                                <VisitorRow prefix="Time in: " text={visitor.signInTime} />
+                                <VisitorRow prefix="Date out: " text={visitor.signOutDate} />
+                                <VisitorRow prefix="Time out: " text={visitor.signOutTime} />
+                            </VisitorContainer>
+                        </React.Fragment>
+                    )
                 }) ??
                     <LoadingSpinner />
                 }

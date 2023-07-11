@@ -1,19 +1,11 @@
-import { useOutletContext } from 'react-router-dom'
-import { useEffect } from 'react'
-import IOLogoContainer from './IOLogoContainer'
-import Button from './Button'
+import GenericPage from './GenericPage'
 
-const AdminLoginIncorrect = () => {
-    const [, setLinks] = useOutletContext()
-    useEffect(() => setLinks(["Home"]), [])
-
-    return (
-        <IOLogoContainer>
-            <h1 className="text-3xl p-1 text-center">Admin login</h1>
-            <h2 className="text-center p-1">Incorrect passcode. Please try again.</h2>
-            <Button link="Login"/>
-        </IOLogoContainer>
-    )
-}
+const AdminLoginIncorrect = () =>
+    <GenericPage
+        h1="Admin login"
+        h2="Incorrect passcode. Please try again."
+        links={["Home"]}
+        button="Login"
+        replace={true} />
 
 export default AdminLoginIncorrect

@@ -1,9 +1,10 @@
 const mongoUrl = ''// Add MongoDB connection URI
+const db = "OfficeSignIn"// add db name
 const { MongoClient } = require('mongodb')
 const session = require('express-session')
 const MongoDBStore = require('connect-mongodb-session')(session);
 
-async function getCollection(db, collection) {
+async function getCollection(collection) {
     const connection = await MongoClient.connect(mongoUrl)
     const result = connection.db(db).collection(collection)
     return result

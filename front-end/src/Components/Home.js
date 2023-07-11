@@ -5,7 +5,7 @@ import Button from "./Button"
 
 const Home = () => {
     const [, setLinks] = useOutletContext()
-    useEffect(() => setLinks(["Admin"]), [])
+    useEffect(() => setLinks(["Admin"]), [setLinks])
 
     return (
         <IOLogoContainer>

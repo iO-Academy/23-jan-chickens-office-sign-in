@@ -1,17 +1,10 @@
-import { useOutletContext } from 'react-router-dom'
-import { useEffect } from 'react'
-import IOLogoContainer from './IOLogoContainer'
+import GenericPage from './GenericPage'
 
-const NoMatch = () => {
-    const [links, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Home"]), [])
-    
-    return (
-        <IOLogoContainer>
-            <h1 className="text-3xl p-1 text-center">404</h1>
-            <h2 className="text-center p-1">Page not found.</h2>
-        </IOLogoContainer>
-    )
-}
+const NoMatch = () =>
+    <GenericPage
+        h1="404"
+        h2="Page not found."
+        links={["Home"]} 
+        replace={true} />
 
 export default NoMatch

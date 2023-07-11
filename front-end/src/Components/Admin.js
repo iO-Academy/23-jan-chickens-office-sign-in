@@ -4,10 +4,10 @@ import IOLogoContainer from "./IOLogoContainer"
 import Button from "./Button"
 
 const Admin = () => {
-    const [, setLinks] = useOutletContext();
-    // useEffect(() => setLinks(["Logout"]), [])
-    useEffect(() => setLinks(["Logout"]), [setLinks])
-
+    const [, setLinks] = useOutletContext()
+    useEffect(() => {
+        setLinks(["Logout"])
+    }, [setLinks])
 
     return (
         <IOLogoContainer>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useNavigate, useOutletContext } from "react-router-dom"
+import { useNavigate, useOutletContext, useLocation } from "react-router-dom"
 import { baseURL } from "../config"
 import LoadingSpinner from "./LoadingSpinner"
 import IOLogoContainer from "./IOLogoContainer"
@@ -14,11 +14,11 @@ const SignInForm = () => {
     const [name, setName] = useState(null)
     const [company, setCompany] = useState(null)
     const [time, setTime] = useState(defaultTime)
-    // const [date, setDate] = useState(defaultDate)
     const [date, setDate] = useState(defaultBodyDate)
     const [isLoading, setIsLoading] = useState(false)
-    const [, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Home"]), [])
+    const [, setLinks] = useOutletContext()
+    const location = useLocation()
+    useEffect(() => setLinks(["Home"]), [setLinks])
 
     const handleSignIn = (event) => {
         event.preventDefault()
@@ -38,14 +38,16 @@ const SignInForm = () => {
         }
         ).then((response) => {
             setIsLoading(false)
-            response.status !== 200 ?
-                navigate("/sign-in/failure") :
+            if (response.status === 200) {
                 navigate("/sign-in/success")
+            } else if (window.location.pathname === location.pathname) {
+                navigate("failure", { state: response.status })
+            }
         })
-        .catch((e) => {
-            console.error(e.message)
-            navigate("/sign-in/failure")
-        })
+            .catch((e) => {
+                console.error(e.message)
+                window.location.pathname === location.pathname && navigate("failure")
+            })
     }
 
     const handleNameChange = (event) => {
@@ -55,7 +57,7 @@ const SignInForm = () => {
         setCompany(event.target.value)
     }
     const handleDateChange = (event) => {
-        let userInputDate = new Date(event.target.value + 'T00:00');
+        let userInputDate = new Date(event.target.value + 'T00:00')
         let localDate = userInputDate.toLocaleDateString("en-GB")
         setDate(localDate)
     }

@@ -2,7 +2,6 @@ import iOLogo from "../io-logo.jpg"
 import { useState } from "react"
 
 const IOLogoContainer = (props) => {
-
     const [imgLoaded, setImgLoaded] = useState(false)
     const handleImgLoad = () => {
         setImgLoaded(true)

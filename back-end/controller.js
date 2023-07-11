@@ -6,17 +6,10 @@ const crypto = require('crypto')
 var profanity = require('@2toad/profanity').profanity;
 
 
-
 const addNewVisitor = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const collection = await getCollection("Visitors")
         const name = profanity.censor(request.body.name)
-
-        // if (profanity.exists(name)) {
-        //     name = profanity.censor(name)
-        // }
-        //profanity.censor(name)
-
         const signInTime = request.body.signInTime
         const signInDate = request.body.signInDate
         if (name && signInTime && signInDate && name.length < 100) {
@@ -28,7 +21,6 @@ const addNewVisitor = async (request, response) => {
             }
             if (request.body.company) {
                 newVisitor['company'] = profanity.censor(request.body.company)
-                // newVisitor['company'] = request.body.company
             }
             await collection.insertOne(newVisitor)
             return response.status(200).json({
@@ -51,13 +43,11 @@ const addNewVisitor = async (request, response) => {
 
 const getAdminAuthorization = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Admin")
+        const collection = await getCollection("Admin")
         const loginInput = request.body.passcode
         const data = await collection.findOne({ hash: { $exists: true } })
         const loginHash = crypto.pbkdf2Sync(loginInput, data.salt,
             1000, 64, `sha512`).toString(`hex`);
-        console.log("data.hash: " + data.hash)
-        console.log("loginHash: " + loginHash)
         if (loginHash == data.hash) {
             response.setHeader('access-control-expose-headers', 'Set-Cookie')
             request.session.authorised = true
@@ -81,30 +71,11 @@ const getAdminAuthorization = async (request, response) => {
     }
 }
 
-// const getAdminAuthorization = async (request, response) => {
-//     const loginInput = request.body.passcode
-//     if (loginInput === '1234') {
-//         response.setHeader('access-control-expose-headers', 'Set-Cookie')
-//         request.session.authorised = true
-//         response.status(200).json(
-//             {
-//                 message: 'Authorization successful',
-//                 data: []
-//             })
-//     } else {
-//         response.status(401).json(
-//             {
-//                 message: 'Authorization failed',
-//                 data: []
-//             })
-//     }
-// }
-
 const getVisitorsBySignIn = async (request, response) => {
     try {
         if (request.query.signedIn === "true" || request.query.signedIn === "false") {
             const signedInBool = request.query.signedIn === "true" ? true : false
-            const collection = await getCollection("OfficeSignIn", "Visitors")
+            const collection = await getCollection("Visitors")
             if (Object.keys(request.query).length == 1) {
                 let data = await collection.find({ signedIn: signedInBool }).toArray()
                 return response.status(200).json({
@@ -128,7 +99,7 @@ const getVisitorsBySignIn = async (request, response) => {
 
 const signOutAllVisitors = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const collection = await getCollection("Visitors")
         bulkSignOutDate = request.body.signOutDate
         bulkSignOutTime = request.body.signOutTime
         await collection.updateMany(
@@ -151,7 +122,7 @@ const signOutAllVisitors = async (request, response) => {
 
 const signOutOneVisitorById = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const collection = await getCollection("Visitors")
         visitorSignOutDate = request.body.signOutDate
         visitorSignOutTime = request.body.signOutTime
         const visitorId = request.params.id
@@ -180,7 +151,7 @@ const signOutOneVisitorById = async (request, response) => {
 
 const getVisitorsByName = async (request, response) => {
     try {
-        const collection = await getCollection("OfficeSignIn", "Visitors")
+        const collection = await getCollection("Visitors")
         const name = request.params.name
         let data = await collection.find({ name: new RegExp("^" + name + "$", "i"), signedIn: true }).toArray()
         if (data.length) {
@@ -205,7 +176,6 @@ const getVisitorsByName = async (request, response) => {
 
 const destroyAdminAuthorization = async (request, response) => {
     request.session.destroy()
-    store.all((error, sessions) => { sessions.forEach((session) => console.dir(session)) })
     response.status(200).send()
 }
 

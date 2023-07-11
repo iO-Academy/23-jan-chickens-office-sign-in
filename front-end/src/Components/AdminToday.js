@@ -1,25 +1,33 @@
-import { useNavigate, useOutletContext } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useNavigate, useOutletContext, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import { baseURL } from '../config'
 import LoadingSpinner from './LoadingSpinner'
+import VisitorRow from './VisitorRow'
+import VisitorContainer from './VisitorContainer'
+import IOLogoContainer from './IOLogoContainer'
 
 const AdminToday = () => {
     const [visitors, setVisitors] = useState(null)
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
+    const [signOutClickIsLoading, setSignOutClickIsLoading] = useState(false)
     const [, setLinks] = useOutletContext()
+    const location = useLocation()
 
     useEffect(() => {
         setLinks(["Back"])
-        if (visitors?.length) {
-            setLinks(["Back", "Bulk Sign Out"])
-        } else if (visitors?.length === 0) {
-            setLinks(["Back", "Logout"])
+        if (!signOutClickIsLoading) {
+            if (visitors?.length) {
+                setLinks(["Back", "Bulk Sign Out"])
+            } else if (visitors?.length === 0) {
+                setLinks(["Back", "Logout"])
+            }
         }
     }
-        , [visitors])
+        , [setLinks, visitors, signOutClickIsLoading])
 
     const handleSignoutClick = (event) => {
+        setSignOutClickIsLoading(true)
         const id = event.target.id
         const today = new Date()
         today.setTime(today.getTime() - new Date().getTimezoneOffset() * 60 * 1000)
@@ -39,13 +47,18 @@ const AdminToday = () => {
                     "Content-Type": "application/json"
                 }
             }).then((response) => {
-                response.status !== 200 ?
-                    navigate("/sign-out/failure") :
+                setSignOutClickIsLoading(false)
+                if (response.status === 200) {
                     navigate("/admin/today/sign-out-success")
+                } else if (response.status === 401) {
+                    navigate("/admin/login")
+                } else if (window.location.pathname === location.pathname) {
+                    navigate("/sign-out/failure", { state: response.status })
+                }
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/sign-out/failure")
+                window.location.pathname === location.pathname && navigate("/sign-out/failure")
             })
     }
 
@@ -61,8 +74,8 @@ const AdminToday = () => {
                     return response.json()
                 } else if (response.status === 401) {
                     navigate("/admin/login")
-                } else {
-                    navigate("/admin/today/error")
+                } else if (window.location.pathname === location.pathname) {
+                    navigate("error", { state: response.status })
                 }
             })
             .then((data) => {
@@ -71,26 +84,36 @@ const AdminToday = () => {
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/admin/today/error")
+                window.location.pathname === location.pathname && navigate("error")
             })
-    }, [])
+    }, [navigate, location.pathname])
+
+    if (signOutClickIsLoading) {
+        return (
+            <IOLogoContainer >
+                <LoadingSpinner message="Signing out..." />
+            </IOLogoContainer>
+        )
+    }
 
     return (
         <>
-            <div className="flex flex-col gap-4 items-center justify-center pt-10">
+            <div className="flex flex-col gap-4 items-center justify-center pt-10 pb-7">
                 <h1 className="text-4xl p-1 text-center">Today's Visitors</h1>
-                <p></p>
             </div>
-            <div className="flex flex-wrap justify-center items-center gap-2 mx-auto">
+            <div className="flex flex-wrap justify-center items-center gap-2 mx-auto mb-2">
                 {isLoading ? (<LoadingSpinner />) : (
                     visitors?.length ? ((visitors?.map((visitor, index) => {
                         return (
-                            <div className="w-48 text-xs font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white" key={index}>
-                                <p className="w-full px-2 py-1 border-b border-gray-200 rounded-t-lg dark:border-gray-600">Name: {visitor.name}</p>
-                                <p className="w-full px-2 py-1 border-b border-gray-200 dark:border-gray-600" >From: {visitor.company ?? 'Did not say'}</p>
-                                <p className="w-full px-2 py-1 rounded-b-lg">Time in: {visitor.signInTime}</p>
-                                <input id={visitor._id} className="w-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline" type="submit" value="Sign out" onClick={handleSignoutClick} />
-                            </div>)
+                            <React.Fragment key={index}>
+                                <VisitorContainer>
+                                    <VisitorRow prefix="Name: " text={visitor.name} />
+                                    <VisitorRow prefix="From: " text={(visitor.company ?? 'Did not say')} />
+                                    <VisitorRow prefix="Time in: " text={visitor.signInTime} />
+                                    <input id={visitor._id} className="w-full col-span-full transition ease-in-out delay-150 bg-blue-500  hover:bg-blue-700 duration-300 text-white font-bold py-1 px-2 focus:outline-none focus:shadow-outline" type="submit" value="Sign out" onClick={handleSignoutClick} />
+                                </VisitorContainer>
+                            </React.Fragment>
+                        )
                     }))) : (<p className="text-center pt-10">No visitors present.</p>)
                 )
                 }

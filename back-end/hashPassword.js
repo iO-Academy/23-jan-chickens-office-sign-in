@@ -12,7 +12,7 @@ rl.question("Enter new passcode: ", async function (newPasscode) {
             console.log("Passcode must be 4 digits")
             rl.close()
         }
-        const collection = await getCollection("OfficeSignIn", "Admin")
+        const collection = await getCollection("Admin")
         const salt = crypto.randomBytes(16).toString('hex');
         const newPasscodeHash = crypto.pbkdf2Sync(newPasscode, salt,
             1000, 64, `sha512`).toString(`hex`)
@@ -43,6 +43,6 @@ rl.question("Enter new passcode: ", async function (newPasscode) {
 })
 
 rl.on("close", function () {
-    console.log("Exit");
+    console.log("EXIT");
     process.exit(0);
 });

@@ -1,4 +1,4 @@
-const { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName, destroyAdminAuthorization, optionControl, clearSessionStore } = require('./controller.js')
+const { addNewVisitor, getAdminAuthorization, getVisitorsBySignIn, signOutOneVisitorById, signOutAllVisitors, getVisitorsByName, destroyAdminAuthorization, optionControl, clearSessionStore, validateAdmin } = require('./controller.js')
 const { restrictToAdmin } = require('./middleware/restrictToAdmin')
 
 function routes(app) {

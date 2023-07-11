@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from 'react-router-dom'
+import { useNavigate, useOutletContext, useLocation } from 'react-router-dom'
 import PinInput from 'react-pin-input'
 import { baseURL } from '../config'
 import { useState, useEffect } from 'react'
@@ -8,8 +8,9 @@ import IOLogoContainer from './IOLogoContainer'
 const AdminLogin = () => {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
-    const [, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Home"]), [])
+    const [, setLinks] = useOutletContext()
+    const location = useLocation()
+    useEffect(() => setLinks(["Home"]), [setLinks])
 
     const attemptLogin = (value) => {
         setIsLoading(true)
@@ -25,23 +26,22 @@ const AdminLogin = () => {
                     navigate("/admin")
                 } else if (response.status === 401) {
                     navigate("/admin/login/incorrect")
-                } else {
-                    navigate("/admin/login/failure")
+                } else if (window.location.pathname === location.pathname) {
+                    navigate("failure", { state: response.status })
                 }
             })
             .catch((e) => {
                 console.error(e.message)
-                navigate("/admin/login/failure")
+                window.location.pathname === location.pathname && navigate("failure")
             })
     }
 
     return (
-        <>
-            <>
                 <IOLogoContainer>
-                    <h1 className="text-3xl p-1 text-center">Admin login</h1>
-                    <h2 className="text-center p-1">{isLoading ? <LoadingSpinner message="Verifying passcode..." /> : "Please enter the admin passcode"}</h2>
-                    {!isLoading &&
+                    {isLoading ? <LoadingSpinner message="Verifying passcode..." /> : 
+                    <>
+                        <h1 className="text-3xl p-1 text-center">Admin login</h1>
+                        <h2 className="text-center p-1">Please enter the admin passcode</h2>
                         <div className="flex flex-row justify-center p-10">
                             <PinInput
                                 length={4}
@@ -58,10 +58,9 @@ const AdminLogin = () => {
                                 regexCriteria={/[0-9]{4}/}
                             />
                         </div>
+                    </>
                     }
                 </IOLogoContainer>
-            </>
-        </>
     )
 }
 

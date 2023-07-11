@@ -1,17 +1,17 @@
-import { useEffect } from "react"
-import { useOutletContext } from "react-router-dom"
-import IOLogoContainer from "./IOLogoContainer"
-import Button from "./Button"
+import { useLocation } from "react-router-dom"
+import GenericPage from "./GenericPage"
 
 const GenericError = () => {
-    const [links, setLinks] = useOutletContext();
-    useEffect(() => setLinks(["Back"]), [])
+    const location = useLocation()
+    const errorCode = location.state
 
     return (
-        <IOLogoContainer>
-            <p className="pb-10">Something went wrong. Please try again.</p>
-            <Button link="Home"/>
-        </IOLogoContainer>
+        <GenericPage
+            h1={errorCode || "Error"}
+            h2="Something went wrong. Please try again."
+            links={[]}
+            button="Home"
+            replace={true} />
     )
 }
 

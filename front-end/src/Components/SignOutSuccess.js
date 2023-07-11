@@ -1,19 +1,11 @@
-import { useOutletContext } from "react-router-dom"
-import { useEffect } from "react"
-import IOLogoContainer from "./IOLogoContainer"
-import Button from "./Button"
+import GenericPage from './GenericPage'
 
-const SignOutSuccess = (props) => {
-    const [, setLinks] = useOutletContext()
-    useEffect(() => setLinks(props.links), [])
-
-    return (
-        <IOLogoContainer>
-            <h1 className="text-3xl p-1 text-center">{props.title}</h1>
-            <h2 className="text-center p-1">{props.message}</h2>
-            <Button link="Home"/>
-        </IOLogoContainer>
-    )
-}
+const SignOutSuccess = () =>
+    <GenericPage
+        h1="Visitor sign-out"
+        h2="You have been successfully signed out"
+        links={[]} 
+        button="Home"
+        replace={true} />
 
 export default SignOutSuccess
